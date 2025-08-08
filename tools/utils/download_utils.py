@@ -8,7 +8,7 @@ from httpx import Response, Timeout, Client
 from yarl import URL
 
 
-def download_to_temp(method: str, url: str, timeout: int = 30) -> tuple[str, Optional[str], Optional[str]]:
+def download_to_temp(method: str, url: str, timeout: int = 120) -> tuple[str, Optional[str], Optional[str]]:
     """
     下载文件到临时目录并返回文件路径、MIME类型和文件名。
     :param method: 
