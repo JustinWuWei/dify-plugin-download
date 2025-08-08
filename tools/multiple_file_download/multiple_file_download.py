@@ -35,8 +35,8 @@ class MultipleFileDownloadTool(Tool):
                     }
                 }
             finally:
-                if file_path and Path(file_path).exists():
-                    Path(file_path).unlink()
+                # Clean up the downloaded temporary files
+                Path(file_path).unlink(missing_ok=True)
 
         async def async_download_all():
             loop = asyncio.get_event_loop()

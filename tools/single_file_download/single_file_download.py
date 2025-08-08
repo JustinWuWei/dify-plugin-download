@@ -31,5 +31,4 @@ class SingleFileDownloadTool(Tool):
             )
         finally:
             # Clean up the downloaded temporary file
-            if file_path and Path(file_path).exists():
-                Path(file_path).unlink()
+            Path(file_path).unlink(missing_ok=True)
