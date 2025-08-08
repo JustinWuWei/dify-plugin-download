@@ -43,7 +43,8 @@ multiple_file_download_1.png
 ## Changelog
 
 - 0.0.1:
-    - add `download_single_file` tool, support downloading single file from URL
+    - add `single_file_download` and `multiple_file_download` tool, support downloading single and multiple file from
+      URL(s)
 
 ## License
 
