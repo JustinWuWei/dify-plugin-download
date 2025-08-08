@@ -31,4 +31,5 @@ meta:
   minimum_dify_version: null
 created_at: 2025-08-08T23:06:47.738412+08:00
 privacy: PRIVACY.md
+repo: https://github.com/bowenliang123/dify-plugin-download
 verified: false
