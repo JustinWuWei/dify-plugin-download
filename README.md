@@ -43,3 +43,4 @@ Download files from give URLs to Dify files.
 This plugin collects no data.
 
 All the file transformations are completed locally. NO data is transmitted to third-party services.
+
