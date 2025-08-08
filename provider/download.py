@@ -3,17 +3,19 @@ from typing import Any
 from dify_plugin import ToolProvider
 from dify_plugin.errors.tool import ToolProviderCredentialValidationError
 
+from tools.multiple_file_download.multiple_file_download import MultipleFileDownloadTool
 from tools.single_file_download.single_file_download import SingleFileDownloadTool
 
 
 class DownloadProvider(ToolProvider):
-    
+
     def _validate_credentials(self, credentials: dict[str, Any]) -> None:
         try:
             """
             IMPLEMENT YOUR VALIDATION HERE
             """
             SingleFileDownloadTool.from_credentials({})
+            MultipleFileDownloadTool.from_credentials({})
         except Exception as e:
             raise ToolProviderCredentialValidationError(str(e))
 
@@ -32,7 +34,7 @@ class DownloadProvider(ToolProvider):
     #     except Exception as e:
     #         raise ToolProviderOAuthError(str(e))
     #     return ""
-        
+
     # def _oauth_get_credentials(
     #     self, redirect_uri: str, system_credentials: Mapping[str, Any], request: Request
     # ) -> Mapping[str, Any]:

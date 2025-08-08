@@ -53,6 +53,7 @@ identity:
 
 tools:
   - tools/single_file_download/single_file_download.yaml
+  - tools/multiple_file_download/multiple_file_download.yaml
 extra:
   python:
     source: provider/download.py

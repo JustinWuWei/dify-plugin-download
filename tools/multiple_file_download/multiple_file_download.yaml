@@ -1,0 +1,36 @@
+identity:
+  name: "multiple_file_download"
+  author: "bowenliang123"
+  label:
+    en_US: Download multiple files
+    zh_Hans: 下载多个文件
+description:
+  human:
+    en_US: Download multiple files from URLs
+    zh_Hans: 从URL下载多个文件
+  llm: "Download files from URL"
+parameters:
+  - name: urls
+    type: string
+    required: true
+    label:
+      en_US: Target URL
+      zh_Hans: 目标URL地址
+    human_description:
+      en_US: "Multiple HTTP or HTTPS URLs to download the file from, separated by lines"
+      zh_Hans: "多个HTTP或HTTPS URL地址，每行一个"
+    llm_description: "HTTP or HTTPS URLs to download the file from"
+    form: llm
+  - name: output_filename
+    type: string
+    required: false
+    label:
+      en_US: Output Filename
+      zh_Hans: 输出文件名
+    human_description:
+      en_US: Optional custom output file name, and the filename suffix is not required. Seperated filenames by lines.
+      zh_Hans: 可选的自定义输出文件名，后缀名无需指定。每行一个文件名
+    form: llm
+extra:
+  python:
+    source: tools/multiple_file_download/multiple_file_download.py

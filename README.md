@@ -11,21 +11,32 @@
 Download files from give URLs to Dify files.
 
 ## Key Features
+
 - 🚀 **Download files from URL**
 - ⚡ **Streaming file downloading**
 - 💰 **Concurrent downloading support for multiple files**
 - 🎨 **Support custom output filename**
 
-
 ## Tool Descriptions
 
 ### Download Single File
-- tool: single_file_download
-- inputs:
-  - URL to download file from
-  - Optional: custom filename for the downloaded file
 
-![single_file_download_1.png](_assets/single_file_download_1.png)[](![single_file_download_1.png](_assets/single_file_download_1.png))
+- tool: `single_file_download`
+- inputs:
+    - URL to download file from
+    - Optional: custom filename for the downloaded file
+
+![single_file_download_1.png](_assets/single_file_download_1.png)
+
+### Download Multiple Files
+
+- tool: `multiple_file_download`
+- inputs:
+    - URLs to download file from, one URL per line
+    - Optional: custom filename for the downloaded files, one filename per line
+
+![multiple_file_download_1.png](_assets/multiple_file_download_1.png)
+multiple_file_download_1.png
 
 ---
 
