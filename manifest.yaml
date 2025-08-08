@@ -3,14 +3,14 @@ type: plugin
 author: bowenliang123
 name: download
 label:
-  en_US: File Download
+  en_US: Download
   zh_Hans: 文件下载
 description:
   en_US: Download files from URL
   ja_JP: Download files from URL
   zh_Hans: Download files from URL
 icon: icon.svg
-icon_dark: icon-dark.svg
+icon_dark: icon.svg
 resource:
   memory: 268435456
   permission:
