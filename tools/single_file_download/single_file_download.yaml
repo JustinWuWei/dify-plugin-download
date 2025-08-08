@@ -1,0 +1,36 @@
+identity:
+  name: "single_file_download"
+  author: "bowenliang123"
+  label:
+    en_US: Download single file
+    zh_Hans: 下载单个文件
+description:
+  human:
+    en_US: Download single file from URL
+    zh_Hans: 从URL下载单个文件
+  llm: "Download files from URL"
+parameters:
+  - name: url
+    type: string
+    required: true
+    label:
+      en_US: URL
+      zh_Hans: URL地址
+    human_description:
+      en_US: "HTTP or HTTPS URL to download the file from"
+      zh_Hans: "HTTP或HTTPS URL地址，用于下载文件"
+    llm_description: "HTTP or HTTPS URL to download the file from"
+    form: llm
+  - name: output_filename
+    type: string
+    required: false
+    label:
+      en_US: Output Filename
+      zh_Hans: 输出文件名
+    human_description:
+      en_US: Optional custom output file name, and the filename suffix is not required.
+      zh_Hans: 可选的自定义输出文件名，后缀名无需指定
+    form: llm
+extra:
+  python:
+    source: tools/single_file_download/single_file_download.py

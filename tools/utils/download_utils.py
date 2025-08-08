@@ -1,0 +1,73 @@
+import os
+import re
+import tempfile
+from typing import Optional
+from urllib.parse import urlparse, unquote
+
+from httpx import Response, Timeout, Client
+from yarl import URL
+
+
+def download_to_temp(method: str, url: str, timeout: int = 30) -> tuple[str, Optional[str], Optional[str]]:
+    """
+    下载文件到临时目录并返回文件路径、MIME类型和文件名。
+    :param method: 
+    :param url: 
+    :param timeout: 
+    :return: 
+        下载后临时文件路径
+        MIME类型
+        文件名
+    """""
+    with Client(timeout=Timeout(timeout)) as client:
+        with client.stream(method, url) as response:
+            try:
+                response.raise_for_status()
+            except Exception as e:
+                raise ValueError(f"Failed to download file from {url}, HTTP status code: {response.status_code}, error: {e}")
+
+            content_type = response.headers.get('content-type', '')
+            mime_type = content_type.split(';')[0].strip() if content_type else None
+
+            filename = guess_file_name(url, response)
+
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                file_path = temp_file.name
+                # Stream the response content to the temporary file
+                for chunk in response.iter_bytes():
+                    temp_file.write(chunk)
+
+    return file_path, mime_type, filename
+
+
+def guess_file_name(url: str, response: Response) -> Optional[str]:
+    filename = None
+
+    # Get filename from possible Content-Disposition header
+    content_disposition = response.headers.get('content-disposition', '')
+    if content_disposition:
+        # Expected value：filename="example.txt"
+        match = re.search(r'filename\*?=["\']?(?:.*\')?([^"\';]+)["\']?', content_disposition, re.IGNORECASE)
+        if match:
+            filename = unquote(match.group(1).strip())
+
+    # Parsing URL to get the filename if not found in headers
+    if not filename:
+        parsed = urlparse(url)
+        path = parsed.path
+        if path:
+            filename = unquote(os.path.basename(path))
+
+    return filename
+
+
+def parse_url(url: str) -> Optional[URL]:
+    """
+    Parse a URL string into a yarl.URL object.
+    :param url: The URL string to parse.
+    :return: A yarl.URL object representing the parsed URL.
+    """
+    try:
+        return URL(url)
+    except ValueError as e:
+        return None

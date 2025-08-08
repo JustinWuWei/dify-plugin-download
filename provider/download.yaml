@@ -2,8 +2,8 @@ identity:
   author: "bowenliang123"
   name: "download"
   label:
-    en_US: "download"
-    zh_Hans: "download"
+    en_US: File Download
+    zh_Hans: 文件下载
   description:
     en_US: "Download files from URL"
     zh_Hans: "Download files from URL"
@@ -52,7 +52,7 @@ identity:
 #         en_US: "Access Token"
 
 tools:
-  - tools/download.yaml
+  - tools/single_file_download/single_file_download.yaml
 extra:
   python:
     source: provider/download.py

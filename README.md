@@ -6,15 +6,26 @@
 
 **Dify Marketplace:** https://marketplace.dify.ai/plugins/bowenliang123/download
 
-## Description
+## Overview
 
-This Dify plugin `downlaod` provides tools to download files from URLs.
+Download files from give URLs to Dify files.
 
-## Usage
+## Key Features
+- 🚀 **Download files from URL**
+- ⚡ **Streaming file downloading**
+- 💰 **Concurrent downloading support for multiple files**
+- 🎨 **Support custom output filename**
 
-## Tools
+
+## Tool Descriptions
 
 ### Download Single File
+- tool: single_file_download
+- inputs:
+  - URL to download file from
+  - Optional: custom filename for the downloaded file
+
+![single_file_download_1.png](_assets/single_file_download_1.png)[](![single_file_download_1.png](_assets/single_file_download_1.png))
 
 ---
 

@@ -3,6 +3,8 @@ from typing import Any
 from dify_plugin import ToolProvider
 from dify_plugin.errors.tool import ToolProviderCredentialValidationError
 
+from tools.single_file_download.single_file_download import SingleFileDownloadTool
+
 
 class DownloadProvider(ToolProvider):
     
@@ -11,6 +13,7 @@ class DownloadProvider(ToolProvider):
             """
             IMPLEMENT YOUR VALIDATION HERE
             """
+            SingleFileDownloadTool.from_credentials({})
         except Exception as e:
             raise ToolProviderCredentialValidationError(str(e))
 
