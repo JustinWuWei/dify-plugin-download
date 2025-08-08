@@ -4,12 +4,10 @@ identity:
   label:
     en_US: "download"
     zh_Hans: "download"
-    pt_BR: "download"
 description:
   human:
     en_US: "Download files from URL"
     zh_Hans: "Download files from URL"
-    pt_BR: "Download files from URL"
   llm: "Download files from URL"
 parameters:
   - name: query
@@ -18,11 +16,9 @@ parameters:
     label:
       en_US: Query string
       zh_Hans: 查询语句
-      pt_BR: Query string
     human_description:
       en_US: "Download files from URL"
       zh_Hans: "Download files from URL"
-      pt_BR: "Download files from URL"
     llm_description: "Download files from URL"
     form: llm
 extra:

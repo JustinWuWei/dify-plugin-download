@@ -6,12 +6,10 @@ label:
   en_US: download
   ja_JP: download
   zh_Hans: download
-  pt_BR: download
 description:
   en_US: Download files from URL
   ja_JP: Download files from URL
   zh_Hans: Download files from URL
-  pt_BR: Download files from URL
 icon: icon.svg
 icon_dark: icon-dark.svg
 resource:
