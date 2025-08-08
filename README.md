@@ -16,6 +16,7 @@ Download files from give URLs to Dify files.
 - ⚡ **Streaming file downloading**
 - 💰 **Concurrent downloading support for multiple files**
 - 🎨 **Support custom output filename**
+- 🔄 **Support URL redirection handling**
 
 ## Tool Descriptions
 

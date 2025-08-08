@@ -19,7 +19,7 @@ def download_to_temp(method: str, url: str, timeout: int = 30) -> tuple[str, Opt
         MIME类型
         文件名
     """""
-    with Client(timeout=Timeout(timeout)) as client:
+    with Client(timeout=Timeout(timeout), follow_redirects=True) as client:
         with client.stream(method, url) as response:
             try:
                 response.raise_for_status()
