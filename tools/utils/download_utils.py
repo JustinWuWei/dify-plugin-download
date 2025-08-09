@@ -4,7 +4,7 @@ import tempfile
 from typing import Optional, Mapping
 from urllib.parse import urlparse, unquote
 
-from httpx import Response, Timeout, Client
+from httpx import Response, Client, Timeout
 from yarl import URL
 
 
@@ -18,16 +18,17 @@ def download_to_temp(method: str, url: str,
     Download a file to a temporary file,
     and return the file path, MIME type, and file name.
     """""
-    with Client(timeout=Timeout(timeout),
-                http2=True,
-                follow_redirects=True,
-                verify=ssl_certificate_verify,
-                default_encoding="utf-8",
-                ) as client:
+    with Client(
+            http2=True,
+            follow_redirects=True,
+            verify=ssl_certificate_verify,
+            default_encoding="utf-8",
+    ) as client:
         with client.stream(
                 method=method,
                 url=url,
                 headers=http_headers,
+                timeout=Timeout(timeout),
         ) as response:
             try:
                 response.raise_for_status()
