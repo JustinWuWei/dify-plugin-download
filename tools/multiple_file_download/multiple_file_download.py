@@ -4,7 +4,6 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Mapping, Optional
 
-import httpx
 from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
 from yarl import URL
@@ -15,7 +14,7 @@ from tools.utils.param_utils import parse_json_string_dict
 
 class MultipleFileDownloadTool(Tool):
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:
-        urls: list[URL] = [parse_url(s) for s in tool_parameters.get("urls", "").split("\n") if s and parse_url(s)]
+        urls: list[URL] = [parse_url(s) for s in tool_parameters.get("url", "").split("\n") if s and parse_url(s)]
         request_method: str = tool_parameters.get("request_method", "GET")
         request_timeout = float(tool_parameters.get("request_timeout", "30"))
         request_headers = parse_json_string_dict(tool_parameters.get("request_headers", "{}"))
@@ -34,8 +33,8 @@ class MultipleFileDownloadTool(Tool):
                                  http_method: str,
                                  http_headers: Mapping[str, str],
                                  request_body: str,
-                                 http_proxy:Optional[str],
-                                 https_proxy:Optional[str],
+                                 http_proxy: Optional[str],
+                                 https_proxy: Optional[str],
                                  ):
             if not url or url.scheme not in ["http", "https"]:
                 return None
@@ -72,7 +71,7 @@ class MultipleFileDownloadTool(Tool):
                     loop.run_in_executor(
                         executor, sync_download_single,
                         idx, input_url, request_timeout, ssl_certificate_verify, request_method, request_headers,
-                        request_body_str,http_proxy, https_proxy,
+                        request_body_str, http_proxy, https_proxy,
                     )
                     for idx, input_url in enumerate(urls)
                 ]
