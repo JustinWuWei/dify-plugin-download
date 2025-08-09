@@ -1,14 +1,18 @@
 import os
 import re
 import tempfile
-from typing import Optional
+from typing import Optional, Mapping
 from urllib.parse import urlparse, unquote
 
 from httpx import Response, Timeout, Client
 from yarl import URL
 
 
-def download_to_temp(method: str, url: str, timeout: float = 30, ssl_certificate_verify: bool = True) -> tuple[
+def download_to_temp(method: str, url: str,
+                     timeout: float = 30,
+                     ssl_certificate_verify: bool = True,
+                     http_headers: Mapping[str, str] = None,
+                     ) -> tuple[
     str, Optional[str], Optional[str]]:
     """
     Download a file to a temporary file,
@@ -20,7 +24,11 @@ def download_to_temp(method: str, url: str, timeout: float = 30, ssl_certificate
                 verify=ssl_certificate_verify,
                 default_encoding="utf-8",
                 ) as client:
-        with client.stream(method, url) as response:
+        with client.stream(
+                method=method,
+                url=url,
+                headers=http_headers,
+        ) as response:
             try:
                 response.raise_for_status()
             except Exception as e:

@@ -2,13 +2,14 @@ import asyncio
 from collections.abc import Generator
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
 from yarl import URL
 
 from tools.utils.download_utils import download_to_temp, parse_url
+from tools.utils.param_utils import parse_json_string_dict
 
 
 class MultipleFileDownloadTool(Tool):
@@ -16,13 +17,18 @@ class MultipleFileDownloadTool(Tool):
         urls: list[URL] = [parse_url(s) for s in tool_parameters.get("urls", "").split("\n") if s and parse_url(s)]
         http_method: str = tool_parameters.get("http_method", "GET")
         http_timeout = float(tool_parameters.get("http_timeout", "30"))
+        http_headers = parse_json_string_dict(tool_parameters.get("http_headers", "{}"))
         ssl_certificate_verify: bool = tool_parameters.get("ssl_certificate_verify", "false") == "true"
         custom_output_filenames = tool_parameters.get("output_filename", "").split("\n")
         if not urls or not isinstance(urls, list) or len(urls) == 0:
             raise ValueError("Missing or invalid 'urls' parameter. It must be a list of URLs.")
 
-        def sync_download_single(idx: int, url: URL, http_timeout: float, ssl_certificate_verify: bool,
-                                 http_method: str):
+        def sync_download_single(idx: int,
+                                 url: URL,
+                                 http_timeout: float,
+                                 ssl_certificate_verify: bool,
+                                 http_method: str,
+                                 http_headers: Mapping[str, str], ):
             if not url or url.scheme not in ["http", "https"]:
                 return None
             file_path, mime_type, filename = download_to_temp(
@@ -30,6 +36,7 @@ class MultipleFileDownloadTool(Tool):
                 url=str(url),
                 timeout=http_timeout,
                 ssl_certificate_verify=ssl_certificate_verify,
+                http_headers=http_headers,
             )
             try:
                 downloaded_file_bytes = Path(file_path).read_bytes()
@@ -51,8 +58,10 @@ class MultipleFileDownloadTool(Tool):
             loop = asyncio.get_event_loop()
             with ThreadPoolExecutor() as executor:
                 tasks = [
-                    loop.run_in_executor(executor, sync_download_single, idx, input_url, http_timeout,
-                                         ssl_certificate_verify, http_method)
+                    loop.run_in_executor(
+                        executor, sync_download_single,
+                        idx, input_url, http_timeout, ssl_certificate_verify, http_method, http_headers,
+                    )
                     for idx, input_url in enumerate(urls)
                 ]
                 return await asyncio.gather(*tasks)

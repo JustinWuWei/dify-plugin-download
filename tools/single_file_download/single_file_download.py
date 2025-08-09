@@ -6,6 +6,7 @@ from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
 
 from tools.utils.download_utils import download_to_temp, parse_url
+from tools.utils.param_utils import parse_json_string_dict
 
 
 class SingleFileDownloadTool(Tool):
@@ -14,6 +15,7 @@ class SingleFileDownloadTool(Tool):
         http_method: str = tool_parameters.get("http_method", "GET")
         custom_output_filename = tool_parameters.get("output_filename")
         http_timeout = float(tool_parameters.get("http_timeout", "30"))
+        http_headers = parse_json_string_dict(tool_parameters.get("http_headers", "{}"))
         ssl_certificate_verify: bool = tool_parameters.get("ssl_certificate_verify", "false") == "true"
         url = parse_url(input_url)
         if not url:
@@ -26,6 +28,7 @@ class SingleFileDownloadTool(Tool):
             url=str(url),
             timeout=http_timeout,
             ssl_certificate_verify=ssl_certificate_verify,
+            http_headers=http_headers,
         )
         try:
             downloaded_file_bytes = Path(file_path).read_bytes()

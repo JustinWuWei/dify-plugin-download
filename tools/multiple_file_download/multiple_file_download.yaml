@@ -74,6 +74,17 @@ parameters:
       zh_Hans: 是否启用SSL证书验证
     llm_description: Whether to enable SSL certificate verification, default to "false"
     form: form
+  - name: http_headers
+    type: string
+    required: false
+    default: "{}"
+    label:
+      en_US: HTTP Headers
+      zh_Hans: HTTP 请求头
+    human_description:
+      en_US: 'JSON object of headers in key-value pair, e.g. {"Authorization": "XXX"}'
+      zh_Hans: 'HTTP请求头的JSON对象，例如: {"Authorization": "XXX"}'
+    form: llm
   - name: output_filename
     type: string
     required: false
@@ -81,7 +92,7 @@ parameters:
       en_US: Output Filenames
       zh_Hans: 输出文件名
     human_description:
-      en_US: Optional custom output file names. Seperated filenames by lines, with auto-generated filename in case of empty line.
+      en_US: Optional custom output file names, as each line for single file. Blank line for auto-generated file names from HTTP response.
       zh_Hans: 可选的自定义输出文件名。每行一个文件名，若空行则自动生成。
     form: llm
 extra:

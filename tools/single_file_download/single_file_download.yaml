@@ -74,6 +74,17 @@ parameters:
       zh_Hans: 是否启用SSL证书验证
     llm_description: Whether to enable SSL certificate verification, default to "false"
     form: form
+  - name: http_headers
+    type: string
+    required: false
+    default: "{}"
+    label:
+      en_US: HTTP Headers
+      zh_Hans: HTTP 请求头
+    human_description:
+      en_US: 'JSON object of headers in key-value pair, e.g. {"Authorization": "XXX"}'
+      zh_Hans: 'HTTP请求头的JSON对象，例如: {"Authorization": "XXX"}'
+    form: llm
   - name: output_filename
     type: string
     required: false
