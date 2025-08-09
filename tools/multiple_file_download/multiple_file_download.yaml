@@ -14,12 +14,22 @@ parameters:
     type: string
     required: true
     label:
-      en_US: Target URL
+      en_US: Request URLs
       zh_Hans: 目标URL地址
     human_description:
       en_US: "Multiple HTTP or HTTPS URLs to download the file from, separated by lines"
       zh_Hans: "多个HTTP或HTTPS URL地址，每行一个"
     llm_description: "HTTP or HTTPS URLs to download the file from"
+    form: llm
+  - name: output_filename
+    type: string
+    required: false
+    label:
+      en_US: Output Filenames
+      zh_Hans: 输出文件名
+    human_description:
+      en_US: Optional custom output file names, as each line for single file. Blank line for auto-generated file names from HTTP response.
+      zh_Hans: 可选的自定义输出文件名。每行一个文件名，若空行则自动生成。
     form: llm
   - name: request_method
     type: select
@@ -85,15 +95,15 @@ parameters:
       en_US: 'JSON object of headers in key-value pair, e.g. {"Authorization": "XXX"}'
       zh_Hans: 'HTTP请求头的JSON对象，例如: {"Authorization": "XXX"}'
     form: llm
-  - name: output_filename
+  - name: request_body_str
     type: string
     required: false
     label:
-      en_US: Output Filenames
-      zh_Hans: 输出文件名
+      en_US: POST Request Body text
+      zh_Hans: POST 请求体文本
     human_description:
-      en_US: Optional custom output file names, as each line for single file. Blank line for auto-generated file names from HTTP response.
-      zh_Hans: 可选的自定义输出文件名。每行一个文件名，若空行则自动生成。
+      en_US: 'Optional request body text, being sent as body if the request method is POST.'
+      zh_Hans: '可选的请求体文本，如果请求方法为POST，则作为请求体发送。'
     form: llm
 extra:
   python:

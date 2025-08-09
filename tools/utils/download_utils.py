@@ -12,6 +12,7 @@ def download_to_temp(method: str, url: str,
                      timeout: float = 30,
                      ssl_certificate_verify: bool = True,
                      http_headers: Mapping[str, str] = None,
+                     request_body: Optional[str] = None,
                      ) -> tuple[
     str, Optional[str], Optional[str]]:
     """
@@ -29,6 +30,7 @@ def download_to_temp(method: str, url: str,
                 url=url,
                 headers=http_headers,
                 timeout=Timeout(timeout),
+                content=request_body.encode("utf-8") if request_body else None,
         ) as response:
             try:
                 response.raise_for_status()

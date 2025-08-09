@@ -2,7 +2,7 @@ import asyncio
 from collections.abc import Generator
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, Optional
 
 from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
@@ -18,6 +18,7 @@ class MultipleFileDownloadTool(Tool):
         request_method: str = tool_parameters.get("request_method", "GET")
         request_timeout = float(tool_parameters.get("request_timeout", "30"))
         request_headers = parse_json_string_dict(tool_parameters.get("request_headers", "{}"))
+        request_body_str: Optional[str] = tool_parameters.get("request_body_str")
         ssl_certificate_verify: bool = tool_parameters.get("ssl_certificate_verify", "false") == "true"
         custom_output_filenames = tool_parameters.get("output_filename", "").split("\n")
         if not urls or not isinstance(urls, list) or len(urls) == 0:
@@ -28,7 +29,9 @@ class MultipleFileDownloadTool(Tool):
                                  http_timeout: float,
                                  ssl_certificate_verify: bool,
                                  http_method: str,
-                                 http_headers: Mapping[str, str], ):
+                                 http_headers: Mapping[str, str],
+                                 request_body: str,
+                                 ):
             if not url or url.scheme not in ["http", "https"]:
                 return None
             file_path, mime_type, filename = download_to_temp(
@@ -37,6 +40,7 @@ class MultipleFileDownloadTool(Tool):
                 timeout=http_timeout,
                 ssl_certificate_verify=ssl_certificate_verify,
                 http_headers=http_headers,
+                request_body=request_body,
             )
             try:
                 downloaded_file_bytes = Path(file_path).read_bytes()
@@ -61,6 +65,7 @@ class MultipleFileDownloadTool(Tool):
                     loop.run_in_executor(
                         executor, sync_download_single,
                         idx, input_url, request_timeout, ssl_certificate_verify, request_method, request_headers,
+                        request_body_str,
                     )
                     for idx, input_url in enumerate(urls)
                 ]

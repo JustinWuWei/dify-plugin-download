@@ -1,6 +1,6 @@
 from collections.abc import Generator
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
@@ -16,6 +16,7 @@ class SingleFileDownloadTool(Tool):
         custom_output_filename = tool_parameters.get("output_filename")
         request_timeout = float(tool_parameters.get("request_timeout", "30"))
         request_headers = parse_json_string_dict(tool_parameters.get("request_headers", "{}"))
+        request_body_str: Optional[str] = tool_parameters.get("request_body_str")
         ssl_certificate_verify: bool = tool_parameters.get("ssl_certificate_verify", "false") == "true"
         url = parse_url(input_url)
         if not url:
@@ -29,6 +30,7 @@ class SingleFileDownloadTool(Tool):
             timeout=request_timeout,
             ssl_certificate_verify=ssl_certificate_verify,
             http_headers=request_headers,
+            request_body=request_body_str,
         )
         try:
             downloaded_file_bytes = Path(file_path).read_bytes()
