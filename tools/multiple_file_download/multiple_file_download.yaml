@@ -10,7 +10,7 @@ description:
     zh_Hans: 从URL下载多个文件
   llm: "Download files from URL"
 parameters:
-  - name: urls
+  - name: url
     type: string
     required: true
     label:
@@ -19,7 +19,7 @@ parameters:
     human_description:
       en_US: "Multiple HTTP or HTTPS URLs to download the file from, separated by lines"
       zh_Hans: "多个HTTP或HTTPS URL地址，每行一个"
-    llm_description: "HTTP or HTTPS URLs to download the file from"
+    llm_description: "Multiple HTTP or HTTPS URLs to download the file from, each line for a single URL"
     form: llm
   - name: output_filename
     type: string
