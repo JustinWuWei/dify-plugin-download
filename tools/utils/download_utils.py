@@ -10,21 +10,16 @@ from yarl import URL
 
 def download_to_temp(method: str, url: str, timeout: int = 120) -> tuple[str, Optional[str], Optional[str]]:
     """
-    下载文件到临时目录并返回文件路径、MIME类型和文件名。
-    :param method: 
-    :param url: 
-    :param timeout: 
-    :return: 
-        下载后临时文件路径
-        MIME类型
-        文件名
+    Download a file to a temporary file,
+    and return the file path, MIME type, and file name.
     """""
     with Client(timeout=Timeout(timeout), follow_redirects=True) as client:
         with client.stream(method, url) as response:
             try:
                 response.raise_for_status()
             except Exception as e:
-                raise ValueError(f"Failed to download file from {url}, HTTP status code: {response.status_code}, error: {e}")
+                raise ValueError(
+                    f"Failed to download file from {url}, HTTP status code: {response.status_code}, error: {e}")
 
             content_type = response.headers.get('content-type', '')
             mime_type = content_type.split(';')[0].strip() if content_type else None
@@ -63,9 +58,7 @@ def guess_file_name(url: str, response: Response) -> Optional[str]:
 
 def parse_url(url: str) -> Optional[URL]:
     """
-    Parse a URL string into a yarl.URL object.
-    :param url: The URL string to parse.
-    :return: A yarl.URL object representing the parsed URL.
+    Parse a URL and return a yarl.URL object or None if parsing fails.
     """
     try:
         return URL(url)
