@@ -21,7 +21,7 @@ parameters:
       zh_Hans: "多个HTTP或HTTPS URL地址，每行一个"
     llm_description: "HTTP or HTTPS URLs to download the file from"
     form: llm
-  - name: http_method
+  - name: request_method
     type: select
     required: true
     default: "GET"
@@ -42,13 +42,13 @@ parameters:
       zh_Hans: 请求URL时使用的HTTP请求方法，默认为"GET"
     llm_description: HTTP method to use for downloading files, default to "GET"
     form: form
-  - name: http_timeout
+  - name: request_timeout
     type: number
     required: true
     default: 30
     label:
-      en_US: HTTP Timeout
-      zh_Hans: HTTP 超时时间
+      en_US: Request Timeout
+      zh_Hans: 请求超时时间
     human_description:
       en_US: Timeout in seconds for connection timeout and read timeout of HTTP requests
       zh_Hans: HTTP请求的连接超时和读超时的超时时间（秒）
@@ -74,7 +74,7 @@ parameters:
       zh_Hans: 是否启用SSL证书验证
     llm_description: Whether to enable SSL certificate verification, default to "false"
     form: form
-  - name: http_headers
+  - name: request_headers
     type: string
     required: false
     default: "{}"

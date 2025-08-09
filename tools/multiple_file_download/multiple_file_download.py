@@ -15,9 +15,9 @@ from tools.utils.param_utils import parse_json_string_dict
 class MultipleFileDownloadTool(Tool):
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:
         urls: list[URL] = [parse_url(s) for s in tool_parameters.get("urls", "").split("\n") if s and parse_url(s)]
-        http_method: str = tool_parameters.get("http_method", "GET")
-        http_timeout = float(tool_parameters.get("http_timeout", "30"))
-        http_headers = parse_json_string_dict(tool_parameters.get("http_headers", "{}"))
+        request_method: str = tool_parameters.get("request_method", "GET")
+        request_timeout = float(tool_parameters.get("request_timeout", "30"))
+        request_headers = parse_json_string_dict(tool_parameters.get("request_headers", "{}"))
         ssl_certificate_verify: bool = tool_parameters.get("ssl_certificate_verify", "false") == "true"
         custom_output_filenames = tool_parameters.get("output_filename", "").split("\n")
         if not urls or not isinstance(urls, list) or len(urls) == 0:
@@ -60,7 +60,7 @@ class MultipleFileDownloadTool(Tool):
                 tasks = [
                     loop.run_in_executor(
                         executor, sync_download_single,
-                        idx, input_url, http_timeout, ssl_certificate_verify, http_method, http_headers,
+                        idx, input_url, request_timeout, ssl_certificate_verify, request_method, request_headers,
                     )
                     for idx, input_url in enumerate(urls)
                 ]
