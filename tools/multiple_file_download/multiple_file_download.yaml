@@ -28,8 +28,8 @@ parameters:
       en_US: Output Filenames
       zh_Hans: 输出文件名
     human_description:
-      en_US: Optional custom output file names, and the filename suffix is not required. Seperated filenames by lines, with auto-generated filename in case of empty line.
-      zh_Hans: 可选的自定义输出文件名，后缀名无需指定。每行一个文件名，若空行则自动生成。
+      en_US: Optional custom output file names. Seperated filenames by lines, with auto-generated filename in case of empty line.
+      zh_Hans: 可选的自定义输出文件名。每行一个文件名，若空行则自动生成。
     form: llm
 extra:
   python:
