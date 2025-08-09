@@ -12,13 +12,16 @@ Download files from give URLs to Dify files.
 
 ## Key Features
 
-- 🚀 **HTTP Download files from URL**
-- 🌊 **Streaming file downloading**
-- 💰 **Concurrent support for multiple files downloading**
-- ⚡ ** Support GET / POST methods with custom body and headers**
+- 🚀 **HTTP/2 support**
+- 💫 **Connection pooling with keep-alive support**
+- 🌊 **Streaming transporting**
+- 💰 **Concurrent downloads**
+- ⚡ **GET / POST method**
 - 🎨 **Custom output filenames**
+- 🌼 **Custom HTTP headers**
 - 🔄 **HTTP redirection auto-handling**
-- 🌟 **Timout controls and SSL certificate verification options**
+- 🌟 **Timout controls**
+- ✨ **SSL certificate verification options**
 
 ## Tool Descriptions
 
