@@ -69,4 +69,4 @@ class MultipleFileDownloadTool(Tool):
         results = asyncio.run(async_download_all())
         for result in results:
             if result:
-                yield self.create_blob_message(blob=result["blob"], meta=result["meta"])
+                yield self.create_blob_message(**result)
