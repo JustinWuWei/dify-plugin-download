@@ -46,6 +46,8 @@ multiple_file_download_1.png
 - 0.0.1:
     - add `single_file_download` and `multiple_file_download` tool, support downloading single and multiple file from
       URL(s)
+    - support HTTP 301/302 redirection
+    - support enabling / disabling SSL certificate verification
 
 ## License
 

@@ -32,6 +32,27 @@ parameters:
       en_US: Timeout in seconds for connection timeout and read timeout of HTTP requests
       zh_Hans: HTTP请求的连接超时和读超时的超时时间（秒）
     form: form
+  - name: ssl_certificate_verify
+    type: select
+    required: false
+    default: "false"
+    options:
+      - value: "true"
+        label:
+          en_US: "Yes"
+          zh_Hans: 是
+      - value: "false"
+        label:
+          en_US: "No"
+          zh_Hans: 否
+    label:
+      en_US: Enable SSL Certificate Verification
+      zh_Hans: 是否启用SSL证书验证
+    human_description:
+      en_US: Enable SSL Certificate Verification
+      zh_Hans: 是否启用SSL证书验证
+    llm_description: Whether to enable SSL certificate verification, default to "false"
+    form: form
   - name: output_filename
     type: string
     required: false

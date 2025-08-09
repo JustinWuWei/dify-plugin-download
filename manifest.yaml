@@ -6,8 +6,8 @@ label:
   en_US: Download
   zh_Hans: 文件下载
 description:
-  en_US: Download single or multiple files from URL links, with streaming and concurrency support. Auto-detected or custom downloaded filenames and file extensions.
-  zh_Hans: 下载单个或多个文件，支持流式下载和并发下载。自动检测或自定义下载的文件名及文件类型。
+  en_US: Download files from URL links, with support for streaming and concurrent downloads, custom file names, HTTP redirection and disabling SSL certificate verification.
+  zh_Hans: 从URL链接下载文件，支持流式和并发下载，支持自定义文件名、HTTP跳转、开关SSL证书验证。
 icon: icon.svg
 icon_dark: icon.svg
 resource:
