@@ -9,7 +9,7 @@ from tools.utils.download_utils import download_to_temp, parse_url
 
 
 class SingleFileDownloadTool(Tool):
-    def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:
+    def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:
         input_url = tool_parameters.get("url")
         custom_output_filename = tool_parameters.get("output_filename")
         http_timeout = float(tool_parameters.get("http_timeout", "30"))

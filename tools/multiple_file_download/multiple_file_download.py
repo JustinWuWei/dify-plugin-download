@@ -11,7 +11,7 @@ from tools.utils.download_utils import download_to_temp, parse_url
 
 
 class MultipleFileDownloadTool(Tool):
-    def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:
+    def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:
         urls = [s.strip() for s in tool_parameters.get("urls", "").split("\n") if s and s.strip()]
         http_timeout = float(tool_parameters.get("http_timeout", "30"))
         custom_output_filenames = tool_parameters.get("output_filename", "").split("\n")
