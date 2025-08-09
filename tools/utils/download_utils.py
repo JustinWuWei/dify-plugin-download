@@ -8,7 +8,7 @@ from httpx import Response, Timeout, Client
 from yarl import URL
 
 
-def download_to_temp(method: str, url: str, timeout: int = 120) -> tuple[str, Optional[str], Optional[str]]:
+def download_to_temp(method: str, url: str, timeout: float = 30) -> tuple[str, Optional[str], Optional[str]]:
     """
     Download a file to a temporary file,
     and return the file path, MIME type, and file name.
@@ -31,6 +31,7 @@ def download_to_temp(method: str, url: str, timeout: int = 120) -> tuple[str, Op
                 # Stream the response content to the temporary file
                 for chunk in response.iter_bytes():
                     temp_file.write(chunk)
+                temp_file.close()
 
     return file_path, mime_type, filename
 

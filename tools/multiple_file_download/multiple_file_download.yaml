@@ -21,6 +21,17 @@ parameters:
       zh_Hans: "多个HTTP或HTTPS URL地址，每行一个"
     llm_description: "HTTP or HTTPS URLs to download the file from"
     form: llm
+  - name: http_timeout
+    type: number
+    required: true
+    default: 30
+    label:
+      en_US: HTTP Timeout
+      zh_Hans: HTTP 超时时间
+    human_description:
+      en_US: Timeout in seconds for connection timeout and read timeout of HTTP requests
+      zh_Hans: HTTP请求的连接超时和读超时的超时时间（秒）
+    form: llm
   - name: output_filename
     type: string
     required: false

@@ -13,15 +13,16 @@ from tools.utils.download_utils import download_to_temp, parse_url
 class MultipleFileDownloadTool(Tool):
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:
         urls = tool_parameters.get("urls", "").split("\n")
+        http_timeout = float(tool_parameters.get("http_timeout", "30"))
         custom_output_filenames = tool_parameters.get("output_filename", "").split("\n")
         if not urls or not isinstance(urls, list) or len(urls) == 0:
             raise ValueError("Missing or invalid 'urls' parameter. It must be a list of URLs.")
 
-        def sync_download_single(idx, input_url):
+        def sync_download_single(idx, input_url, http_timeout):
             url = parse_url(input_url)
             if not url or url.scheme not in ["http", "https"]:
                 return None
-            file_path, mime_type, filename = download_to_temp(method="GET", url=str(url))
+            file_path, mime_type, filename = download_to_temp(method="GET", url=str(url), timeout=http_timeout)
             try:
                 downloaded_file_bytes = Path(file_path).read_bytes()
                 output_filename = None
@@ -42,7 +43,7 @@ class MultipleFileDownloadTool(Tool):
             loop = asyncio.get_event_loop()
             with ThreadPoolExecutor() as executor:
                 tasks = [
-                    loop.run_in_executor(executor, sync_download_single, idx, input_url)
+                    loop.run_in_executor(executor, sync_download_single, idx, input_url, http_timeout)
                     for idx, input_url in enumerate(urls)
                 ]
                 return await asyncio.gather(*tasks)
