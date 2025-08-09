@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Mapping, Optional
 
+import httpx
 from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
 from yarl import URL
@@ -21,6 +22,8 @@ class MultipleFileDownloadTool(Tool):
         request_body_str: Optional[str] = tool_parameters.get("request_body_str")
         ssl_certificate_verify: bool = tool_parameters.get("ssl_certificate_verify", "false") == "true"
         custom_output_filenames = tool_parameters.get("output_filename", "").split("\n")
+        http_proxy: Optional[str] = tool_parameters.get("http_proxy")
+        https_proxy: Optional[str] = tool_parameters.get("https_proxy")
         if not urls or not isinstance(urls, list) or len(urls) == 0:
             raise ValueError("Missing or invalid 'urls' parameter. It must be a list of URLs.")
 
@@ -31,6 +34,8 @@ class MultipleFileDownloadTool(Tool):
                                  http_method: str,
                                  http_headers: Mapping[str, str],
                                  request_body: str,
+                                 http_proxy:Optional[str],
+                                 https_proxy:Optional[str],
                                  ):
             if not url or url.scheme not in ["http", "https"]:
                 return None
@@ -41,6 +46,8 @@ class MultipleFileDownloadTool(Tool):
                 ssl_certificate_verify=ssl_certificate_verify,
                 http_headers=http_headers,
                 request_body=request_body,
+                http_proxy=http_proxy,
+                https_proxy=https_proxy,
             )
             try:
                 downloaded_file_bytes = Path(file_path).read_bytes()
@@ -65,7 +72,7 @@ class MultipleFileDownloadTool(Tool):
                     loop.run_in_executor(
                         executor, sync_download_single,
                         idx, input_url, request_timeout, ssl_certificate_verify, request_method, request_headers,
-                        request_body_str,
+                        request_body_str,http_proxy, https_proxy,
                     )
                     for idx, input_url in enumerate(urls)
                 ]

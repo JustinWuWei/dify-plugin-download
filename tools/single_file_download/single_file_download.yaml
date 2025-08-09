@@ -105,6 +105,26 @@ parameters:
       en_US: 'Optional request body text, being sent as body if the request method is POST.'
       zh_Hans: '可选的请求体文本，如果请求方法为POST，则作为请求体发送。'
     form: llm
+  - name: http_proxy
+    type: string
+    required: false
+    label:
+      en_US: HTTP Proxy
+      zh_Hans: HTTP Proxy
+    human_description:
+      en_US: Proxy URL for HTTP requests, e.g. "http://proxy.example.com:8080"
+      zh_Hans: HTTP请求的代理URL，例如 "http://proxy.example.com:8080"
+    form: form
+  - name: https_proxy
+    type: string
+    required: false
+    label:
+      en_US: HTTPS Proxy
+      zh_Hans: HTTPS Proxy
+    human_description:
+      en_US: Proxy URL for HTTPS requests, e.g. "http://proxy.example.com:8080"
+      zh_Hans: HTTPS请求的代理URL，例如 "http://proxy.example.com:8080"
+    form: form
 extra:
   python:
     source: tools/single_file_download/single_file_download.py

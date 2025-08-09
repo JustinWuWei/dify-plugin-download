@@ -18,6 +18,8 @@ class SingleFileDownloadTool(Tool):
         request_headers = parse_json_string_dict(tool_parameters.get("request_headers", "{}"))
         request_body_str: Optional[str] = tool_parameters.get("request_body_str")
         ssl_certificate_verify: bool = tool_parameters.get("ssl_certificate_verify", "false") == "true"
+        http_proxy: Optional[str] = tool_parameters.get("http_proxy")
+        https_proxy: Optional[str] = tool_parameters.get("https_proxy")
         url = parse_url(input_url)
         if not url:
             raise ValueError("Missing or invalid URL.")
