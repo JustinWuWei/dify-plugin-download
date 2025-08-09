@@ -31,7 +31,7 @@ parameters:
     human_description:
       en_US: Timeout in seconds for connection timeout and read timeout of HTTP requests
       zh_Hans: HTTP请求的连接超时和读超时的超时时间（秒）
-    form: llm
+    form: form
   - name: output_filename
     type: string
     required: false
