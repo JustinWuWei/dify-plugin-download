@@ -6,20 +6,20 @@ from typing import Any
 
 from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
+from yarl import URL
 
 from tools.utils.download_utils import download_to_temp, parse_url
 
 
 class MultipleFileDownloadTool(Tool):
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:
-        urls = [s.strip() for s in tool_parameters.get("urls", "").split("\n") if s and s.strip()]
+        urls: list[URL] = [parse_url(s) for s in tool_parameters.get("urls", "").split("\n") if s and parse_url(s)]
         http_timeout = float(tool_parameters.get("http_timeout", "30"))
         custom_output_filenames = tool_parameters.get("output_filename", "").split("\n")
         if not urls or not isinstance(urls, list) or len(urls) == 0:
             raise ValueError("Missing or invalid 'urls' parameter. It must be a list of URLs.")
 
-        def sync_download_single(idx, input_url, http_timeout):
-            url = parse_url(input_url)
+        def sync_download_single(idx: int, url: URL, http_timeout: float):
             if not url or url.scheme not in ["http", "https"]:
                 return None
             file_path, mime_type, filename = download_to_temp(method="GET", url=str(url), timeout=http_timeout)
