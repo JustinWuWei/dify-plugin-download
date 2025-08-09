@@ -14,7 +14,7 @@ def download_to_temp(method: str, url: str, timeout: float = 30, ssl_certificate
     Download a file to a temporary file,
     and return the file path, MIME type, and file name.
     """""
-    with Client(timeout=Timeout(timeout), follow_redirects=True, verify=ssl_certificate_verify) as client:
+    with Client(timeout=Timeout(timeout), http2=True, follow_redirects=True, verify=ssl_certificate_verify) as client:
         with client.stream(method, url) as response:
             try:
                 response.raise_for_status()
