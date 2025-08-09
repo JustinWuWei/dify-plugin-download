@@ -21,6 +21,27 @@ parameters:
       zh_Hans: "多个HTTP或HTTPS URL地址，每行一个"
     llm_description: "HTTP or HTTPS URLs to download the file from"
     form: llm
+  - name: http_method
+    type: select
+    required: true
+    default: "GET"
+    options:
+      - value: "GET"
+        label:
+          en_US: "GET"
+          zh_Hans: "GET"
+      - value: "POST"
+        label:
+          en_US: "POST"
+          zh_Hans: "POST"
+    label:
+      en_US: HTTP method
+      zh_Hans: HTTP 请求方法
+    human_description:
+      en_US: HTTP method to use for requesting URL, default to "GET"
+      zh_Hans: 请求URL时使用的HTTP请求方法，默认为"GET"
+    llm_description: HTTP method to use for downloading files, default to "GET"
+    form: form
   - name: http_timeout
     type: number
     required: true
@@ -34,7 +55,7 @@ parameters:
     form: form
   - name: ssl_certificate_verify
     type: select
-    required: false
+    required: true
     default: "false"
     options:
       - value: "true"

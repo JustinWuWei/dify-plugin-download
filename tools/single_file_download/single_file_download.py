@@ -11,6 +11,7 @@ from tools.utils.download_utils import download_to_temp, parse_url
 class SingleFileDownloadTool(Tool):
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:
         input_url = tool_parameters.get("url")
+        http_method: str = tool_parameters.get("http_method", "GET")
         custom_output_filename = tool_parameters.get("output_filename")
         http_timeout = float(tool_parameters.get("http_timeout", "30"))
         ssl_certificate_verify: bool = tool_parameters.get("ssl_certificate_verify", "false") == "true"
@@ -21,8 +22,11 @@ class SingleFileDownloadTool(Tool):
             raise ValueError("Invalid URL format. URL must start with 'http://' or 'https://'.")
 
         file_path, mime_type, filename = download_to_temp(
-            method="GET", url=str(url), timeout=http_timeout,
-            ssl_certificate_verify=ssl_certificate_verify)
+            method=http_method,
+            url=str(url),
+            timeout=http_timeout,
+            ssl_certificate_verify=ssl_certificate_verify,
+        )
         try:
             downloaded_file_bytes = Path(file_path).read_bytes()
 
