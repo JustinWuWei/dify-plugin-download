@@ -43,6 +43,10 @@ def download_to_temp(method: str, url: str,
                 raise ValueError(
                     f"Failed to download file from {url}, HTTP status code: {response.status_code}, error: {e}")
 
+            # check if the download is cancelled
+            if cancel_event and cancel_event.is_set():
+                return "", None, None
+
             content_type = response.headers.get('content-type', '')
             mime_type = content_type.split(';')[0].strip() if content_type else None
 
