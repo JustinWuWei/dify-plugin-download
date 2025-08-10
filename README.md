@@ -14,7 +14,7 @@ Download files from give URLs to Dify files.
 
 - 🚀 **HTTP/2 support**
 - 🌊 **Streaming transporting**
-- 💫 **Concurrent downloads**
+- 💫 **Concurrent downloads (To be done)**
 - ⚡ **GET / POST method with custom request body**
 - 🎨 **Custom output filenames**
 - 🌼 **Custom HTTP headers**
@@ -58,12 +58,14 @@ multiple_file_download_1.png
 ---
 
 ## Changelog
+- 0.2.0:
+  - temporarily falling back concurrent downloads to synchronous downloads 
 
-- 0.0.1:
-    - add `single_file_download` and `multiple_file_download` tool, support downloading single and multiple file from
-      URL(s)
-    - support HTTP 301/302 redirection
-    - support enabling / disabling SSL certificate verification
+- 0.1.0:
+  - add `single_file_download` and `multiple_file_download` tool, support downloading single and multiple file from
+    URL(s)
+  - support HTTP 301/302 redirection
+  - support enabling / disabling SSL certificate verification
 
 ## License
 

@@ -1,4 +1,4 @@
-version: 0.1.0
+version: 0.2.0
 type: plugin
 author: bowenliang123
 name: download
@@ -6,8 +6,8 @@ label:
   en_US: Download
   zh_Hans: 文件下载
 description:
-  en_US: Download files from URL links, with support for streaming and concurrent downloads, custom file names, HTTP redirection and disabling SSL certificate verification.
-  zh_Hans: 从URL链接下载文件，支持流式和并发下载，支持自定义文件名、HTTP跳转、开关SSL证书验证。
+  en_US: Download files from URL, with support of streaming transporting, proxy, custom file names, HTTP redirection, timeout controls and SSL certificate configs.
+  zh_Hans: 从URL链接下载文件, 支持流式传输、代理、自定义文件名、HTTP重定向、超时控制和SSL开关等功能。
 icon: icon.svg
 icon_dark: icon.svg
 resource:

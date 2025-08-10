@@ -1,6 +1,5 @@
 import asyncio
 from collections.abc import Generator
-from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Mapping, Optional
 
@@ -61,20 +60,10 @@ class MultipleFileDownloadTool(Tool):
                 # Clean up the downloaded temporary files
                 Path(file_path).unlink(missing_ok=True)
 
-        async def async_download_all():
-            loop = asyncio.get_event_loop()
-            with ThreadPoolExecutor() as executor:
-                tasks = [
-                    loop.run_in_executor(
-                        executor, sync_download_single,
-                        idx, input_url, request_timeout, ssl_certificate_verify, request_method, request_headers,
-                        request_body_str, proxy_url,
-                    )
-                    for idx, input_url in enumerate(urls)
-                ]
-                return await asyncio.gather(*tasks)
-
-        results = asyncio.run(async_download_all())
-        for result in results:
-            if result:
-                yield self.create_blob_message(**result)
+        for idx, u in enumerate(urls):
+            result = sync_download_single(
+                idx, u, request_timeout, ssl_certificate_verify, request_method,
+                request_headers,
+                request_body_str, proxy_url,
+            )
+            yield self.create_blob_message(**result)
