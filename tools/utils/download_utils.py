@@ -4,7 +4,7 @@ import tempfile
 from typing import Optional, Mapping
 from urllib.parse import urlparse, unquote
 
-from httpx import Response, Client, Timeout, HTTPTransport
+from httpx import Response, Client, Timeout
 from yarl import URL
 
 
@@ -13,8 +13,7 @@ def download_to_temp(method: str, url: str,
                      ssl_certificate_verify: bool = True,
                      http_headers: Mapping[str, str] = None,
                      request_body: Optional[str] = None,
-                     http_proxy: Optional[str] = None,
-                     https_proxy: Optional[str] = None,
+                     proxy_url: Optional[str] = None,
                      ) -> tuple[
     str, Optional[str], Optional[str]]:
     """
@@ -26,7 +25,7 @@ def download_to_temp(method: str, url: str,
             follow_redirects=True,
             verify=ssl_certificate_verify,
             default_encoding="utf-8",
-            mounts=get_proxies(http_proxy, https_proxy, ssl_certificate_verify),
+            proxy=proxy_url,
     ) as client:
         with client.stream(
                 method=method,
@@ -54,26 +53,6 @@ def download_to_temp(method: str, url: str,
                 temp_file.close()
 
     return file_path, mime_type, filename
-
-
-def get_proxies(http_proxy, https_proxy, ssl_certificate_verify: bool) -> Optional[dict[str, HTTPTransport]]:
-    if not http_proxy and not https_proxy:
-        return None
-
-    proxy_mounts = {}
-    if http_proxy:
-        proxy_mounts["http://"] = HTTPTransport(
-            proxy=http_proxy,
-            http2=True,
-            verify=ssl_certificate_verify,
-        )
-    if https_proxy:
-        proxy_mounts["https://"] = HTTPTransport(
-            proxy=https_proxy,
-            http2=True,
-            verify=ssl_certificate_verify,
-        )
-    return proxy_mounts
 
 
 def guess_file_name(url: str, response: Response) -> Optional[str]:
