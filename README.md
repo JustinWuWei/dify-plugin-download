@@ -60,6 +60,7 @@ multiple_file_download_1.png
 ## Changelog
 - 0.3.0:
   - support concurrent downloads with failing-fast handling
+  - lower the default request timeout to 5 seconds
 
 - 0.2.0:
   - temporarily falling back from concurrent downloads to synchronous downloads 
