@@ -18,7 +18,7 @@ Download files from give URLs to Dify files.
 - ⚡ **GET / POST method with custom request body**
 - 🎨 **Custom output filenames**
 - 🌼 **Custom HTTP headers**
-- 🌊 **HTTP / HTTPS / SOCKS proxy support**
+- 🏖️ **HTTP / HTTPS / SOCKS proxy support**
 - 🔄 **HTTP redirection auto-handling**
 - 🌟 **Timout controls**
 - ✨ **SSL certificate verification options**
