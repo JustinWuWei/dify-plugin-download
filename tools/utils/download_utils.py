@@ -1,6 +1,7 @@
 import os
 import re
 import tempfile
+from pathlib import Path
 from typing import Optional, Mapping
 from urllib.parse import urlparse, unquote
 
@@ -47,10 +48,15 @@ def download_to_temp(method: str, url: str,
 
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 file_path = temp_file.name
-                # Stream the response content to the temporary file
-                for chunk in response.iter_bytes():
-                    temp_file.write(chunk)
-                temp_file.close()
+                try:
+                    # Stream the response content to the temporary file
+                    for chunk in response.iter_bytes():
+                        temp_file.write(chunk)
+                except:
+                    Path(file_path).unlink()
+                    file_path = None
+                finally:
+                    temp_file.close()
 
     return file_path, mime_type, filename
 
