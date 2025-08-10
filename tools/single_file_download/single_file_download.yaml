@@ -87,7 +87,6 @@ parameters:
   - name: request_headers
     type: string
     required: false
-    default: "{}"
     label:
       en_US: HTTP Headers
       zh_Hans: HTTP 请求头

@@ -15,7 +15,7 @@ class SingleFileDownloadTool(Tool):
         request_method: str = tool_parameters.get("request_method", "GET")
         custom_output_filename = tool_parameters.get("output_filename")
         request_timeout = float(tool_parameters.get("request_timeout", "30"))
-        request_headers = parse_json_string_dict(tool_parameters.get("request_headers", "{}"))
+        request_headers = parse_json_string_dict(tool_parameters.get("request_headers"))
         request_body_str: Optional[str] = tool_parameters.get("request_body_str")
         ssl_certificate_verify: bool = tool_parameters.get("ssl_certificate_verify", "false") == "true"
         proxy_url: Optional[str] = tool_parameters.get("proxy_url")
