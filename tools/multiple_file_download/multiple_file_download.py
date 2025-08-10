@@ -1,8 +1,7 @@
-import concurrent
 import threading
 from collections.abc import Generator
 from concurrent.futures import ThreadPoolExecutor
-from concurrent.futures._base import DoneAndNotDoneFutures
+from concurrent.futures._base import DoneAndNotDoneFutures, wait, FIRST_EXCEPTION
 from pathlib import Path
 from typing import Any, Optional
 
@@ -49,10 +48,10 @@ class MultipleFileDownloadTool(Tool):
                                              cancel_event)
                     futures.append(future)
 
-                waited: DoneAndNotDoneFutures = concurrent.futures.wait(
+                waited: DoneAndNotDoneFutures = wait(
                     futures,
-                    timeout=request_timeout * 10,
-                    return_when=concurrent.futures.FIRST_EXCEPTION)
+                    timeout=request_timeout * 30,
+                    return_when=FIRST_EXCEPTION)
                 done = waited.done
                 not_done = waited.not_done
 
