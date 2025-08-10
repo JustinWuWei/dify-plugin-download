@@ -52,7 +52,7 @@ def download_to_temp(method: str, url: str,
                 file_path = temp_file.name
                 try:
                     # Stream the response content to the temporary file
-                    for chunk in response.iter_bytes():
+                    for chunk in response.iter_bytes(chunk_size=8192):
                         # check if the download is cancelled
                         if cancel_event and cancel_event.is_set():
                             return "", None, None
