@@ -19,7 +19,7 @@ Download files from give URLs to Dify files.
 - 🎨 **Custom output filenames**
 - 🌼 **Custom HTTP headers**
 - 🏖️ **HTTP / HTTPS / SOCKS proxy support**
-- 🔄 **HTTP redirection auto-handling**
+- 🧭 **HTTP redirection auto-handling**
 - 🌟 **Timout controls**
 - ✨ **SSL certificate verification options**
 
