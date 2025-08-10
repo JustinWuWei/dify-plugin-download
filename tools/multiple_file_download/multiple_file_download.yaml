@@ -45,7 +45,7 @@ parameters:
           en_US: "POST"
           zh_Hans: "POST"
     label:
-      en_US: HTTP method
+      en_US: HTTP Request Method
       zh_Hans: HTTP 请求方法
     human_description:
       en_US: HTTP method to use for requesting URL, default to "GET"
