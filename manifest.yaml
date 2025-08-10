@@ -11,7 +11,7 @@ description:
 icon: icon.svg
 icon_dark: icon.svg
 resource:
-  memory: 268435456
+  memory: 536870912
   permission:
     tool:
       enabled: true
