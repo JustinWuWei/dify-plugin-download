@@ -57,8 +57,7 @@ class MultipleFileDownloadTool(Tool):
                 not_done = waited.not_done
 
                 if len(not_done) > 0:
-
-                    print(f"{len(not_done)} of {len(futures)} URLs failed to download.")
+                    # cancel all downloads by setting the cancel event
                     cancel_event.set()
 
                     # cancel unfinished futures
@@ -76,6 +75,7 @@ class MultipleFileDownloadTool(Tool):
                         if f.exception():
                             raise f.exception()
                 else:
+                    # all completed without exceptions
                     for future in done:
                         file_path, mime_type, filename = future.result()
                         try:
