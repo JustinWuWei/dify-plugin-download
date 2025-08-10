@@ -1,4 +1,4 @@
-# Download - File downloader
+# Download - Full-featured File Downloader
 
 **Author:** [bowenliang123](https://github.com/bowenliang123)
 
@@ -58,6 +58,9 @@ multiple_file_download_1.png
 ---
 
 ## Changelog
+- 0.3.0:
+  - support concurrent downloads with failing-fast handling
+
 - 0.2.0:
   - temporarily falling back from concurrent downloads to synchronous downloads 
 
