@@ -18,7 +18,7 @@ class MultipleFileDownloadTool(Tool):
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:
         urls: list[URL] = [parse_url(s) for s in tool_parameters.get("url", "").split("\n") if s and parse_url(s)]
         request_method: str = tool_parameters.get("request_method", "GET")
-        request_timeout = float(tool_parameters.get("request_timeout", "30"))
+        request_timeout = float(tool_parameters.get("request_timeout", "5"))
         request_headers = parse_json_string_dict(tool_parameters.get("request_headers"))
         request_body_str: Optional[str] = tool_parameters.get("request_body_str")
         ssl_certificate_verify: bool = tool_parameters.get("ssl_certificate_verify", "false") == "true"
