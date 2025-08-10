@@ -112,8 +112,8 @@ parameters:
       en_US: Proxy URL
       zh_Hans: Proxy 地址
     human_description:
-      en_US: Proxy URL for HTTP/HTTPS requests, e.g. "http://proxy:7890" 或 "socks://proxy:7890"
-      zh_Hans: HTTP/HTTPS请求的代理URL，例如 "http://proxy:7890" 或 "socks://proxy:7890"
+      en_US: Proxy URL for HTTP/HTTPS requests, e.g. "http://proxy:7890" or "socks5://proxy:7890"
+      zh_Hans: HTTP/HTTPS请求的代理URL，例如 "http://proxy:7890" 或 "socks5://proxy:7890"
     form: form
 extra:
   python:
