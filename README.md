@@ -30,7 +30,12 @@ Download files from give URLs to Dify files.
 - tool: `single_file_download`
 - inputs:
     - URL to download file from
-    - Optional: custom filename for the downloaded file
+    - Optional:
+      - custom filename for the downloaded file
+      - HTTP method to use, either `GET` or `POST`
+      - HTTP headers in JSON format, one header per line
+      - Proxy URL, supporting `http://`, `https://`, `socks5://`
+      - enable or disable SSL certificate verification
 
 ![single_file_download_1.png](_assets/single_file_download_1.png)
 
@@ -39,7 +44,13 @@ Download files from give URLs to Dify files.
 - tool: `multiple_file_download`
 - inputs:
     - URLs to download file from, one URL per line
-    - Optional: custom filename for the downloaded files, one filename per line
+    - Request Timeout in seconds
+    - Optional: 
+      - Custom filename for the downloaded files, one filename per line
+      - HTTP method to use, either `GET` or `POST`
+      - HTTP headers in JSON format, one header per line
+      - Proxy URL, supporting `http://`, `https://`, `socks5://`
+      - enable or disable SSL certificate verification
 
 ![multiple_file_download_1.png](_assets/multiple_file_download_1.png)
 multiple_file_download_1.png
