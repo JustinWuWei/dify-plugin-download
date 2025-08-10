@@ -59,7 +59,7 @@ multiple_file_download_1.png
 
 ## Changelog
 - 0.2.0:
-  - temporarily falling back concurrent downloads to synchronous downloads 
+  - temporarily falling back from concurrent downloads to synchronous downloads 
 
 - 0.1.0:
   - add `single_file_download` and `multiple_file_download` tool, support downloading single and multiple file from
