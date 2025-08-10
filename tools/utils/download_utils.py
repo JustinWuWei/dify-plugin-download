@@ -1,6 +1,7 @@
 import os
 import re
 import tempfile
+import threading
 from pathlib import Path
 from typing import Optional, Mapping
 from urllib.parse import urlparse, unquote
@@ -15,6 +16,7 @@ def download_to_temp(method: str, url: str,
                      http_headers: Mapping[str, str] = None,
                      request_body: Optional[str] = None,
                      proxy_url: Optional[str] = None,
+                     cancel_event: threading.Event = None,
                      ) -> tuple[
     str, Optional[str], Optional[str]]:
     """
@@ -51,6 +53,10 @@ def download_to_temp(method: str, url: str,
                 try:
                     # Stream the response content to the temporary file
                     for chunk in response.iter_bytes():
+                        # check if the download is cancelled
+                        if cancel_event and cancel_event.is_set():
+                            return "", None, None
+
                         temp_file.write(chunk)
                 except:
                     Path(file_path).unlink()

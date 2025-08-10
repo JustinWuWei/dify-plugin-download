@@ -1,4 +1,8 @@
+import concurrent
+import threading
 from collections.abc import Generator
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures._base import DoneAndNotDoneFutures
 from pathlib import Path
 from typing import Any, Optional
 
@@ -23,31 +27,70 @@ class MultipleFileDownloadTool(Tool):
         if not urls or not isinstance(urls, list) or len(urls) == 0:
             raise ValueError("Missing or invalid 'urls' parameter. It must be a list of URLs.")
 
-        for idx, url in enumerate(urls):
-            if not url or url.scheme not in ["http", "https"]:
-                continue
-
-            custom_output_filename = custom_output_filenames[idx] \
-                if idx < len(custom_output_filenames) and custom_output_filenames[idx] else None
-
-            file_path, mime_type, filename = download_to_temp(
-                method=request_method,
-                url=str(url),
-                timeout=request_timeout,
-                ssl_certificate_verify=ssl_certificate_verify,
-                http_headers=request_headers,
-                request_body=request_body_str,
-                proxy_url=proxy_url,
-            )
+        with ThreadPoolExecutor() as executor:
             try:
-                downloaded_file_bytes = Path(file_path).read_bytes()
-                yield self.create_blob_message(
-                    blob=downloaded_file_bytes,
-                    meta={
-                        "mime_type": mime_type,
-                        "filename": custom_output_filename or filename,
-                    }
-                )
+                futures = []
+                cancel_event = threading.Event()
+                for idx, url in enumerate(urls):
+                    if not url or url.scheme not in ["http", "https"]:
+                        continue
+
+                    custom_output_filename = custom_output_filenames[idx] \
+                        if idx < len(custom_output_filenames) and custom_output_filenames[idx] else None
+
+                    future = executor.submit(download_to_temp,
+                                             request_method,
+                                             str(url),
+                                             request_timeout,
+                                             ssl_certificate_verify,
+                                             request_headers,
+                                             request_body_str,
+                                             proxy_url,
+                                             cancel_event)
+                    futures.append(future)
+
+                waited: DoneAndNotDoneFutures = concurrent.futures.wait(
+                    futures,
+                    timeout=request_timeout * 10,
+                    return_when=concurrent.futures.FIRST_EXCEPTION)
+                done = waited.done
+                not_done = waited.not_done
+
+                if len(not_done) > 0:
+
+                    print(f"{len(not_done)} of {len(futures)} URLs failed to download.")
+                    cancel_event.set()
+
+                    # cancel unfinished futures
+                    for future in not_done:
+                        future.cancel()
+
+                    done_without_exception = [f for f in done if not f.exception()]
+                    done_with_exception = [f for f in done if f.exception()]
+
+                    for f in done_without_exception:
+                        file_path, mime_type, filename = f.result()
+                        Path(file_path).unlink()
+
+                    for f in done_with_exception:
+                        if f.exception():
+                            raise f.exception()
+                else:
+                    for future in done:
+                        file_path, mime_type, filename = future.result()
+                        try:
+                            downloaded_file_bytes = Path(file_path).read_bytes()
+                            yield self.create_blob_message(
+                                blob=downloaded_file_bytes,
+                                meta={
+                                    "mime_type": mime_type,
+                                    "filename": custom_output_filename or filename,
+                                }
+                            )
+                        finally:
+                            # Clean up the downloaded temporary files
+                            Path(file_path).unlink(missing_ok=True)
             finally:
-                # Clean up the downloaded temporary files
-                Path(file_path).unlink(missing_ok=True)
+                # Force shutdown the executor if an exception occurs
+                if executor:
+                    executor.shutdown(wait=False, cancel_futures=True)
