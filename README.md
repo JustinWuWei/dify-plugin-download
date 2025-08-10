@@ -14,7 +14,7 @@ Download files from give URLs to Dify files.
 
 - 🚀 **HTTP/2 support**
 - 🌊 **Streaming transporting**
-- 💫 **Concurrent downloads (To be done)**
+- 💫 **Concurrent downloads with failing-fast handling**
 - ⚡ **GET / POST method with custom request body**
 - 🎨 **Custom output filenames**
 - 🌼 **Custom HTTP headers**
