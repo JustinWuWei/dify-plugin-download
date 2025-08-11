@@ -21,7 +21,7 @@ class ClientHolder:
             verify=True,
             default_encoding="utf-8",
             proxy=None,
-            limits=Limits(max_connections=200, max_keepalive_connections=50, keepalive_expiry=120),
+            limits=Limits(max_connections=200, max_keepalive_connections=50, keepalive_expiry=300),
         )
 
     def get_client(self, proxy_url: Optional[str], ssl_certificate_verify: bool) -> tuple[Client, bool]:
