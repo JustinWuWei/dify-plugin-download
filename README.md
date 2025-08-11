@@ -15,7 +15,7 @@ Download files from URL, with support of concurrent downloading, streaming trans
 - 🔁 **Connection pooling with keep-alive support by default**
 - 🌊 **Streaming transporting**
 - 💫 **Concurrent downloads with failing-fast handling**
-- 🚀 **HTTP/2 support**
+- 🚀 **HTTP/1.1 and HTTP/2 support**
 - ⚡ **GET / POST method with custom request body**
 - 🎨 **Custom output filenames**
 - 🌼 **Custom HTTP headers**
