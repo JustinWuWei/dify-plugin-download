@@ -6,8 +6,8 @@ label:
   en_US: Download
   zh_Hans: 文件下载
 description:
-  en_US: Download files from URL, with support of concurrent downloading, streaming transporting, proxy, custom file names, HTTP redirection, timeout controls and SSL certificate configs.
-  zh_Hans: 从URL链接下载文件, 支持并发、流式传输、代理、自定义文件名、HTTP重定向、超时控制和SSL开关等功能。
+  en_US: Download files from URL, with support of concurrent downloading, streaming transporting, proxy, keep-alive, custom file names, HTTP redirection, timeout controls and SSL certificate configs.
+  zh_Hans: 从URL链接下载文件, 支持并发、流式传输、代理、连接复用、自定义文件名、HTTP重定向、超时控制和SSL开关等功能。
 icon: icon.svg
 icon_dark: icon.svg
 resource:

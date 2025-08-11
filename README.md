@@ -8,7 +8,7 @@
 
 ## Overview
 
-Download files from give URLs to Dify files.
+Download files from URL, with support of concurrent downloading, streaming transporting, proxy, keep-alive, custom file names, HTTP redirection, timeout controls and SSL certificate configs.
 
 ## Key Features
 
