@@ -3,26 +3,21 @@ from collections.abc import Generator
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures._base import DoneAndNotDoneFutures, wait, FIRST_EXCEPTION
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
-from yarl import URL
 
-from tools.utils.download_utils import download_to_temp, parse_url
-from tools.utils.param_utils import parse_json_string_dict
+from tools.utils.download_utils import download_to_temp
+from tools.utils.param_utils import parse_common_params
 
 
 class MultipleFileDownloadTool(Tool):
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:
-        urls: list[URL] = [parse_url(s) for s in tool_parameters.get("url", "").split("\n") if s and parse_url(s)]
-        request_method: str = tool_parameters.get("request_method", "GET")
-        request_timeout = float(tool_parameters.get("request_timeout", "5"))
-        request_headers = parse_json_string_dict(tool_parameters.get("request_headers"))
-        request_body_str: Optional[str] = tool_parameters.get("request_body_str")
-        ssl_certificate_verify: bool = tool_parameters.get("ssl_certificate_verify", "false") == "true"
-        custom_output_filenames = tool_parameters.get("output_filename", "").split("\n")
-        proxy_url: Optional[str] = tool_parameters.get("proxy_url")
+        params = parse_common_params(tool_parameters)
+        urls = params.urls
+        custom_output_filenames = params.custom_output_filenames
+
         if not urls or not isinstance(urls, list) or len(urls) == 0:
             raise ValueError("Missing or invalid 'urls' parameter. It must be a list of URLs.")
 
@@ -37,20 +32,23 @@ class MultipleFileDownloadTool(Tool):
                     custom_output_filename = custom_output_filenames[idx] \
                         if idx < len(custom_output_filenames) and custom_output_filenames[idx] else None
 
-                    future = executor.submit(download_to_temp,
-                                             request_method,
-                                             str(url),
-                                             request_timeout,
-                                             ssl_certificate_verify,
-                                             request_headers,
-                                             request_body_str,
-                                             proxy_url,
-                                             cancel_event)
+                    future = executor.submit(
+                        download_to_temp,
+                        params.request_method,
+                        str(url),
+                        params.request_timeout,
+                        params.ssl_certificate_verify,
+                        params.request_headers,
+                        params.request_body_str,
+                        params.proxy_url,
+                        cancel_event,
+                        custom_output_filename,
+                    )
                     futures.append(future)
 
                 waited: DoneAndNotDoneFutures = wait(
                     futures,
-                    timeout=request_timeout * 30,
+                    timeout=params.request_timeout * 30,
                     return_when=FIRST_EXCEPTION)
                 done = waited.done
                 not_done = waited.not_done
@@ -83,7 +81,7 @@ class MultipleFileDownloadTool(Tool):
                                 blob=downloaded_file_bytes,
                                 meta={
                                     "mime_type": mime_type,
-                                    "filename": custom_output_filename or filename,
+                                    "filename": filename,
                                 }
                             )
                         finally:

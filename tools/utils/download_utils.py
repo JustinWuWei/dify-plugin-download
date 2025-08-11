@@ -17,6 +17,7 @@ def download_to_temp(method: str, url: str,
                      request_body: Optional[str] = None,
                      proxy_url: Optional[str] = None,
                      cancel_event: threading.Event = None,
+                     custom_filename:Optional[str]=None,
                      ) -> tuple[Optional[str], Optional[str], Optional[str]]:
     """
     Download a file to a temporary file,
@@ -49,7 +50,7 @@ def download_to_temp(method: str, url: str,
             content_type = response.headers.get('content-type')
             mime_type: Optional[str] = content_type.split(';')[0].strip() if content_type else None
 
-            filename = guess_file_name(url, response)
+            filename = custom_filename or guess_file_name(url, response)
 
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 file_path = temp_file.name
