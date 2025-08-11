@@ -14,8 +14,8 @@ class DownloadProvider(ToolProvider):
             """
             IMPLEMENT YOUR VALIDATION HERE
             """
-            SingleFileDownloadTool.from_credentials({})
-            MultipleFileDownloadTool.from_credentials({})
+            for t in [SingleFileDownloadTool, MultipleFileDownloadTool]:
+                t.from_credentials({})
         except Exception as e:
             raise ToolProviderCredentialValidationError(str(e))
 

@@ -9,6 +9,8 @@ from urllib.parse import urlparse, unquote
 from httpx import Response, Client, Timeout
 from yarl import URL
 
+from tools.utils.file_utils import delete_file
+
 
 def download_to_temp(method: str, url: str,
                      timeout: float = 30,
@@ -63,7 +65,7 @@ def download_to_temp(method: str, url: str,
 
                         temp_file.write(chunk)
                 except:
-                    Path(file_path).unlink()
+                    delete_file(file_path)
                     file_path = None
                 finally:
                     temp_file.close()

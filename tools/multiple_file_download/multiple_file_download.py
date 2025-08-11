@@ -9,6 +9,7 @@ from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
 
 from tools.utils.download_utils import download_to_temp
+from tools.utils.file_utils import delete_file
 from tools.utils.param_utils import parse_common_params
 
 
@@ -21,16 +22,18 @@ class MultipleFileDownloadTool(Tool):
         if not urls or not isinstance(urls, list) or len(urls) == 0:
             raise ValueError("Missing or invalid 'urls' parameter. It must be a list of URLs.")
 
+        futures = []
+        cancel_event = threading.Event()
         with ThreadPoolExecutor() as executor:
             try:
-                futures = []
-                cancel_event = threading.Event()
                 for idx, url in enumerate(urls):
                     if not url or url.scheme not in ["http", "https"]:
                         continue
 
                     custom_output_filename = custom_output_filenames[idx] \
                         if idx < len(custom_output_filenames) and custom_output_filenames[idx] else None
+
+                    # print(f"{idx} : {custom_output_filename}, {url}")
 
                     future = executor.submit(
                         download_to_temp,
@@ -46,48 +49,52 @@ class MultipleFileDownloadTool(Tool):
                     )
                     futures.append(future)
 
+                # Wait for all futures to complete or for first exception to occur
                 waited: DoneAndNotDoneFutures = wait(
                     futures,
                     timeout=params.request_timeout * 30,
                     return_when=FIRST_EXCEPTION)
                 done = waited.done
                 not_done = waited.not_done
-
-                if len(not_done) > 0:
-                    # cancel all downloads by setting the cancel event
-                    cancel_event.set()
-
-                    # cancel unfinished futures
-                    for future in not_done:
-                        future.cancel()
-
-                    done_without_exception = [f for f in done if not f.exception()]
-                    done_with_exception = [f for f in done if f.exception()]
-
-                    for f in done_without_exception:
-                        file_path, mime_type, filename = f.result()
-                        Path(file_path).unlink()
-
-                    for f in done_with_exception:
-                        if f.exception():
-                            raise f.exception()
+                if not_done and len(not_done) > 0:
+                    self.handle_partial_done(cancel_event, done, not_done)
                 else:
-                    # all completed without exceptions
-                    for future in done:
-                        file_path, mime_type, filename = future.result()
-                        try:
-                            downloaded_file_bytes = Path(file_path).read_bytes()
-                            yield self.create_blob_message(
-                                blob=downloaded_file_bytes,
-                                meta={
-                                    "mime_type": mime_type,
-                                    "filename": filename,
-                                }
-                            )
-                        finally:
-                            # Clean up the downloaded temporary files
-                            Path(file_path).unlink(missing_ok=True)
+                    yield from self.handle_all_done(done)
             finally:
                 # Force shutdown the executor if an exception occurs
                 if executor:
                     executor.shutdown(wait=False, cancel_futures=True)
+
+    def handle_all_done(self, done) -> Generator[ToolInvokeMessage, None, None]:
+        # all completed without exceptions
+        for future in done:
+            file_path, mime_type, filename = future.result()
+            try:
+                downloaded_file_bytes = Path(file_path).read_bytes()
+                yield self.create_blob_message(
+                    blob=downloaded_file_bytes,
+                    meta={
+                        "mime_type": mime_type,
+                        "filename": filename,
+                    }
+                )
+            finally:
+                # Clean up the downloaded temporary files
+                delete_file(file_path)
+
+    def handle_partial_done(self, cancel_event, done, not_done):
+        # cancel all downloads by setting the cancel event
+        cancel_event.set()
+        # cancel unfinished futures
+        for future in not_done:
+            future.cancel()
+        done_without_exception = [f for f in done if not f.exception()]
+        done_with_exception = [f for f in done if f.exception()]
+        # Clean up the downloaded temporary files for those that completed without exceptions
+        for f in done_without_exception:
+            file_path, mime_type, filename = f.result()
+            delete_file(file_path)
+        # Raise the first exception encountered in the futures
+        for f in done_with_exception:
+            if f.exception():
+                raise f.exception()

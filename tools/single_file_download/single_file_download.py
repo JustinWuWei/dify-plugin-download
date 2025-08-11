@@ -6,6 +6,7 @@ from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
 
 from tools.utils.download_utils import download_to_temp
+from tools.utils.file_utils import delete_file
 from tools.utils.param_utils import parse_common_params
 
 
@@ -40,4 +41,4 @@ class SingleFileDownloadTool(Tool):
             )
         finally:
             # Clean up the downloaded temporary file
-            Path(file_path).unlink(missing_ok=True)
+            delete_file(file_path)
