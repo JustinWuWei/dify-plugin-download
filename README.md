@@ -13,6 +13,7 @@ Download files from give URLs to Dify files.
 ## Key Features
 
 - 🚀 **HTTP/2 support**
+- 🔁 **Connection pooling with keep-alive support**
 - 🌊 **Streaming transporting**
 - 💫 **Concurrent downloads with failing-fast handling**
 - ⚡ **GET / POST method with custom request body**
@@ -60,6 +61,7 @@ multiple_file_download_1.png
 ## Changelog
 
 - 0.5.0:
+    - support connection pooling with keep-alive support
     - ensure the output files tool in correct order of index in `multiple_file_download`
 
 - 0.4.0:
