@@ -58,6 +58,9 @@ multiple_file_download_1.png
 ---
 
 ## Changelog
+- 0.4.0:
+    - fix custom filenames for multiple file downloads
+
 - 0.3.0:
   - support concurrent downloads with failing-fast handling
   - lower the default request timeout to 5 seconds
