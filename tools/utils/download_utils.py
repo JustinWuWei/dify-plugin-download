@@ -2,6 +2,7 @@ import os
 import re
 import tempfile
 import threading
+from functools import cached_property
 from typing import Optional, Mapping
 from urllib.parse import urlparse, unquote
 
@@ -12,16 +13,35 @@ from tools.utils.file_utils import force_delete_path
 
 
 class ClientHolder:
-    default_client: Client
+    default_connection_limits: Limits
 
     def __init__(self):
-        self.default_client = Client(
+        self.default_connection_limits = Limits(
+            max_connections=200,
+            max_keepalive_connections=50,
+            keepalive_expiry=180)
+        pass
+
+    @cached_property
+    def default_client(self) -> Client:
+        return Client(
             http2=True,
             follow_redirects=True,
             verify=True,
             default_encoding="utf-8",
             proxy=None,
-            limits=Limits(max_connections=200, max_keepalive_connections=50, keepalive_expiry=300),
+            limits=self.default_connection_limits,
+        )
+
+    @cached_property
+    def default_client_without_ssl_verify(self) -> Client:
+        return Client(
+            http2=True,
+            follow_redirects=True,
+            verify=True,
+            default_encoding="utf-8",
+            proxy=None,
+            limits=self.default_connection_limits,
         )
 
     def get_client(self, proxy_url: Optional[str], ssl_certificate_verify: bool) -> tuple[Client, bool]:
@@ -32,7 +52,7 @@ class ClientHolder:
             Client: httpx client
             bool: whether should be manually closed after use
         """
-        if proxy_url or not ssl_certificate_verify:
+        if proxy_url:
             return Client(
                 http2=True,
                 follow_redirects=True,
@@ -40,6 +60,8 @@ class ClientHolder:
                 default_encoding="utf-8",
                 proxy=proxy_url,
             ), True
+        elif not ssl_certificate_verify:
+            return self.default_client_without_ssl_verify, False
         else:
             # should not be closed manually after use as its shared default client
             return self.default_client, False
