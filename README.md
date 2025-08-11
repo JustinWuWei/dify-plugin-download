@@ -12,17 +12,17 @@ Download files from URL, with support of concurrent downloading, streaming trans
 
 ## Key Features
 
-- 🔁 **Connection pooling with keep-alive support by default**
-- 🌊 **Streaming transporting**
-- 💫 **Concurrent downloads with failing-fast handling**
-- 🚀 **HTTP/1.1 and HTTP/2 support**
+- 🔁 **Keep-Alive & Connection Pooling by default**
+- 🌊 **Streaming Downloads**
+- 💫 **Concurrent Downloads with failing-fast handling**
+- 🚀 **HTTP/1.1 and HTTP/2 Support**
 - ⚡ **GET / POST method with custom request body**
 - 🎨 **Custom output filenames**
 - 🌼 **Custom HTTP headers**
-- 🏖️ **HTTP / HTTPS / SOCKS proxy support**
+- 🏖️ **HTTP(S) / SOCKS proxy support**
 - 🧭 **HTTP redirection auto-handling**
-- 📚 **Default Content-Type compression support of Gzip / Brotli / Zstd**
-- 🌟 **Timout controls**
+- 📚 **Automatic Decompression support of Gzip / Brotli / Zstd**
+- 🌟 **Connection Timeouts controls**
 - ✨ **SSL certificate verification options**
 
 ## Tool Descriptions
