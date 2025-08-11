@@ -9,7 +9,7 @@ from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
 
 from tools.utils.download_utils import download_to_temp
-from tools.utils.file_utils import delete_file
+from tools.utils.file_utils import force_delete_path
 from tools.utils.param_utils import parse_common_params
 
 
@@ -80,7 +80,7 @@ class MultipleFileDownloadTool(Tool):
                 )
             finally:
                 # Clean up the downloaded temporary files
-                delete_file(file_path)
+                force_delete_path(file_path)
 
     def handle_partial_done(self, cancel_event, done, not_done):
         # cancel all downloads by setting the cancel event
@@ -93,7 +93,7 @@ class MultipleFileDownloadTool(Tool):
         # Clean up the downloaded temporary files for those that completed without exceptions
         for f in done_without_exception:
             file_path, mime_type, filename = f.result()
-            delete_file(file_path)
+            force_delete_path(file_path)
         # Raise the first exception encountered in the futures
         for f in done_with_exception:
             if f.exception():

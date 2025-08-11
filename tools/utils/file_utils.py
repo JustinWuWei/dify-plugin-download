@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-def delete_file(path:str):
+def force_delete_path(path:str):
     try:
         Path(path).unlink(missing_ok=True)
     except:

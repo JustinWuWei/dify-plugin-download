@@ -2,14 +2,13 @@ import os
 import re
 import tempfile
 import threading
-from pathlib import Path
 from typing import Optional, Mapping
 from urllib.parse import urlparse, unquote
 
 from httpx import Response, Client, Timeout
 from yarl import URL
 
-from tools.utils.file_utils import delete_file
+from tools.utils.file_utils import force_delete_path
 
 
 def download_to_temp(method: str, url: str,
@@ -19,7 +18,7 @@ def download_to_temp(method: str, url: str,
                      request_body: Optional[str] = None,
                      proxy_url: Optional[str] = None,
                      cancel_event: threading.Event = None,
-                     custom_filename:Optional[str]=None,
+                     custom_filename: Optional[str] = None,
                      ) -> tuple[Optional[str], Optional[str], Optional[str]]:
     """
     Download a file to a temporary file,
@@ -65,7 +64,7 @@ def download_to_temp(method: str, url: str,
 
                         temp_file.write(chunk)
                 except:
-                    delete_file(file_path)
+                    force_delete_path(file_path)
                     file_path = None
                 finally:
                     temp_file.close()
