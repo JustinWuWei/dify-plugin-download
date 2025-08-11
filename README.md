@@ -60,7 +60,7 @@ multiple_file_download_1.png
 ## Changelog
 
 - 0.5.0:
-    - ensure the output files in correct order of index
+    - ensure the output files tool in correct order of index in `multiple_file_download`
 
 - 0.4.0:
     - fix custom filenames for multiple file downloads
