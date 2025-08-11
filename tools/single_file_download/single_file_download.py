@@ -25,7 +25,7 @@ class SingleFileDownloadTool(Tool):
             url=str(url),
             timeout=params.request_timeout,
             ssl_certificate_verify=params.ssl_certificate_verify,
-            http_headers=params.request_headers,
+            request_headers=params.request_headers,
             request_body=params.request_body_str,
             proxy_url=params.proxy_url,
             custom_filename=custom_output_filename,

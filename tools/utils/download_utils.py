@@ -48,10 +48,24 @@ class ClientHolder:
 client_holder = ClientHolder()
 
 
+def patch_request_headers(http_headers: Optional[Mapping[str, str]]) -> Mapping[str, str]:
+    headers = http_headers or {}
+
+    # set default Accept-Encoding request header if not provided
+    if not headers.get("Accept-Encoding"):
+        headers["Accept-Encoding"] = "gzip, deflate, br, zstd"
+
+    # enable keep-alive by default
+    if not headers.get("Connection"):
+        headers["Connection"] = "keep-alive"
+
+    return headers
+
+
 def download_to_temp(method: str, url: str,
                      timeout: float = 5.0,
                      ssl_certificate_verify: bool = True,
-                     http_headers: Mapping[str, str] = None,
+                     request_headers: Mapping[str, str] = None,
                      request_body: Optional[str] = None,
                      proxy_url: Optional[str] = None,
                      cancel_event: threading.Event = None,
@@ -63,11 +77,12 @@ def download_to_temp(method: str, url: str,
     and return the file path, MIME type, and file name.
     """""
     client, should_close_client = client_holder.get_client(proxy_url, ssl_certificate_verify)
+    request_headers = patch_request_headers(request_headers)
     try:
         with client.stream(
                 method=method,
                 url=url,
-                headers=http_headers,
+                headers=request_headers,
                 timeout=timeout,
                 content=request_body.encode("utf-8") if request_body else None,
         ) as response:

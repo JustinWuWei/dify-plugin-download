@@ -21,6 +21,7 @@ Download files from URL, with support of concurrent downloading, streaming trans
 - 🌼 **Custom HTTP headers**
 - 🏖️ **HTTP / HTTPS / SOCKS proxy support**
 - 🧭 **HTTP redirection auto-handling**
+- 📚 **Default Content-Type compression support of Gzip / Brotli / Zstd**
 - 🌟 **Timout controls**
 - ✨ **SSL certificate verification options**
 
