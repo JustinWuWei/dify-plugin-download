@@ -65,8 +65,8 @@ parameters:
     form: form
   - name: ssl_certificate_verify
     type: select
-    required: false
-    default: "false"
+    required: true
+    default: "true"
     options:
       - value: "true"
         label:
