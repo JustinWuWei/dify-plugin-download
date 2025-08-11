@@ -46,6 +46,7 @@ class MultipleFileDownloadTool(Tool):
                         params.proxy_url,
                         cancel_event,
                         custom_output_filename,
+                        idx=idx,
                     )
                     futures.append(future)
 
@@ -67,8 +68,9 @@ class MultipleFileDownloadTool(Tool):
 
     def handle_all_done(self, done) -> Generator[ToolInvokeMessage, None, None]:
         # all completed without exceptions
-        for future in done:
-            file_path, mime_type, filename = future.result()
+        sorted_done = sorted(done, key=lambda f: f.result()[0])  # sort by index
+        for future in sorted_done:
+            idx, file_path, mime_type, filename = future.result()
             try:
                 downloaded_file_bytes = Path(file_path).read_bytes()
                 yield self.create_blob_message(

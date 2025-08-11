@@ -19,7 +19,8 @@ def download_to_temp(method: str, url: str,
                      proxy_url: Optional[str] = None,
                      cancel_event: threading.Event = None,
                      custom_filename: Optional[str] = None,
-                     ) -> tuple[Optional[str], Optional[str], Optional[str]]:
+                     idx: int = 0,
+                     ) -> tuple[int, Optional[str], Optional[str], Optional[str]]:
     """
     Download a file to a temporary file,
     and return the file path, MIME type, and file name.
@@ -46,7 +47,7 @@ def download_to_temp(method: str, url: str,
 
             # check if the download is cancelled
             if cancel_event and cancel_event.is_set():
-                return None, None, None
+                return idx, None, None, None
 
             content_type = response.headers.get('content-type')
             mime_type: Optional[str] = content_type.split(';')[0].strip() if content_type else None
@@ -60,7 +61,7 @@ def download_to_temp(method: str, url: str,
                     for chunk in response.iter_bytes(chunk_size=8192):
                         # check if the download is cancelled
                         if cancel_event and cancel_event.is_set():
-                            return None, None, None
+                            return idx, None, None, None
 
                         temp_file.write(chunk)
                 except:
@@ -69,7 +70,7 @@ def download_to_temp(method: str, url: str,
                 finally:
                     temp_file.close()
 
-    return file_path, mime_type, filename
+    return idx, file_path, mime_type, filename
 
 
 def guess_file_name(url: str, response: Response) -> Optional[str]:
