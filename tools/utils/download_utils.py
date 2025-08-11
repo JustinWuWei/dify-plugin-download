@@ -12,7 +12,7 @@ from tools.utils.file_utils import force_delete_path
 
 
 def download_to_temp(method: str, url: str,
-                     timeout: float = 30,
+                     timeout: float = 5.0,
                      ssl_certificate_verify: bool = True,
                      http_headers: Mapping[str, str] = None,
                      request_body: Optional[str] = None,
@@ -31,12 +31,13 @@ def download_to_temp(method: str, url: str,
             verify=ssl_certificate_verify,
             default_encoding="utf-8",
             proxy=proxy_url if proxy_url else None,
+            timeout=timeout,
     ) as client:
         with client.stream(
                 method=method,
                 url=url,
                 headers=http_headers,
-                timeout=Timeout(timeout),
+                timeout=timeout,
                 content=request_body.encode("utf-8") if request_body else None,
         ) as response:
             try:
