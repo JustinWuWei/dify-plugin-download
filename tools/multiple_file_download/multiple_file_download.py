@@ -20,7 +20,7 @@ class MultipleFileDownloadTool(Tool):
         custom_output_filenames = params.custom_output_filenames
 
         if not urls or not isinstance(urls, list) or len(urls) == 0:
-            raise ValueError("Missing or invalid 'urls' parameter. It must be a list of URLs.")
+            raise ValueError("Missing or invalid 'url' parameter. It must be a list of URLs.")
 
         futures = []
         cancel_event = threading.Event()
