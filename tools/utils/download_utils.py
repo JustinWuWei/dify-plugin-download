@@ -5,10 +5,47 @@ import threading
 from typing import Optional, Mapping
 from urllib.parse import urlparse, unquote
 
-from httpx import Response, Client, Timeout
+from httpx import Response, Client, Limits
 from yarl import URL
 
 from tools.utils.file_utils import force_delete_path
+
+
+class ClientHolder:
+    default_client: Client
+
+    def __init__(self):
+        self.default_client = Client(
+            http2=True,
+            follow_redirects=True,
+            verify=True,
+            default_encoding="utf-8",
+            proxy=None,
+            limits=Limits(max_connections=200, max_keepalive_connections=50, keepalive_expiry=60),
+        )
+
+    def get_client(self, proxy_url: Optional[str], ssl_certificate_verify: bool) -> tuple[Client, bool]:
+        """
+        :param proxy_url:
+        :param ssl_certificate_verify:
+        :return:
+            Client: httpx client
+            bool: whether should be manually closed after use
+        """
+        if proxy_url or not ssl_certificate_verify:
+            return Client(
+                http2=True,
+                follow_redirects=True,
+                verify=ssl_certificate_verify,
+                default_encoding="utf-8",
+                proxy=proxy_url,
+            ), True
+        else:
+            # should not be closed manually after use as its shared default client
+            return self.default_client, False
+
+
+client_holder = ClientHolder()
 
 
 def download_to_temp(method: str, url: str,
@@ -25,13 +62,8 @@ def download_to_temp(method: str, url: str,
     Download a file to a temporary file,
     and return the file path, MIME type, and file name.
     """""
-    with Client(
-            http2=True,
-            follow_redirects=True,
-            verify=ssl_certificate_verify,
-            default_encoding="utf-8",
-            proxy=proxy_url if proxy_url else None,
-    ) as client:
+    client, should_close_client = client_holder.get_client(proxy_url, ssl_certificate_verify)
+    try:
         with client.stream(
                 method=method,
                 url=url,
@@ -70,7 +102,10 @@ def download_to_temp(method: str, url: str,
                 finally:
                     temp_file.close()
 
-    return idx, file_path, mime_type, filename
+        return idx, file_path, mime_type, filename
+    finally:
+        if should_close_client:
+            client.close()
 
 
 def guess_file_name(url: str, response: Response) -> Optional[str]:
