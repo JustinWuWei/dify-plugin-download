@@ -31,7 +31,6 @@ def download_to_temp(method: str, url: str,
             verify=ssl_certificate_verify,
             default_encoding="utf-8",
             proxy=proxy_url if proxy_url else None,
-            timeout=timeout,
     ) as client:
         with client.stream(
                 method=method,
