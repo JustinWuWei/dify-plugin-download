@@ -2,8 +2,8 @@ identity:
   name: "download_to_text"
   author: "bowenliang123"
   label:
-    en_US: Download to text
-    zh_Hans: 下载为文本
+    en_US: Download To Text
+    zh_Hans: 批量下载为文本
 description:
   human:
     en_US: Download multiple URLs to text

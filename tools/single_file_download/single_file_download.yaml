@@ -2,7 +2,7 @@ identity:
   name: "single_file_download"
   author: "bowenliang123"
   label:
-    en_US: Download single file
+    en_US: Download Single File
     zh_Hans: 下载单个文件
 description:
   human:

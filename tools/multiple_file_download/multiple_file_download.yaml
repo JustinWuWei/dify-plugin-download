@@ -2,8 +2,8 @@ identity:
   name: "multiple_file_download"
   author: "bowenliang123"
   label:
-    en_US: Download multiple files
-    zh_Hans: 下载多个文件
+    en_US: Download Multiple Files
+    zh_Hans: 下载批量文件
 description:
   human:
     en_US: Download multiple files from URLs
