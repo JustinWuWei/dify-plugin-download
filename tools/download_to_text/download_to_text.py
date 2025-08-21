@@ -7,15 +7,14 @@ from typing import Any
 from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
 
-from tools.utils.download_utils import download_to_temp, handle_all_done, handle_partial_done
+from tools.utils.download_utils import download_to_temp, handle_partial_done, handle_all_done
 from tools.utils.param_utils import parse_common_params
 
 
-class MultipleFileDownloadTool(Tool):
+class DownloadToTextTool(Tool):
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:
         params = parse_common_params(tool_parameters)
         urls = params.urls
-        custom_output_filenames = params.custom_output_filenames
 
         if not urls or not isinstance(urls, list) or len(urls) == 0:
             raise ValueError("Missing or invalid 'url' parameter. It must be a list of URLs.")
@@ -28,11 +27,6 @@ class MultipleFileDownloadTool(Tool):
                     if not url or url.scheme not in ["http", "https"]:
                         continue
 
-                    custom_output_filename = custom_output_filenames[idx] \
-                        if idx < len(custom_output_filenames) and custom_output_filenames[idx] else None
-
-                    # print(f"{idx} : {custom_output_filename}, {url}")
-
                     future = executor.submit(
                         download_to_temp,
                         params.request_method,
@@ -43,7 +37,7 @@ class MultipleFileDownloadTool(Tool):
                         params.request_body_str,
                         params.proxy_url,
                         cancel_event,
-                        custom_output_filename,
+                        None,
                         idx=idx,
                     )
                     futures.append(future)
@@ -58,7 +52,7 @@ class MultipleFileDownloadTool(Tool):
                 if not_done and len(not_done) > 0:
                     handle_partial_done(cancel_event, done, not_done)
                 else:
-                    yield from handle_all_done(self, done)
+                    yield from handle_all_done(self, done, is_to_file=False)
             finally:
                 # Force shutdown the executor if an exception occurs
                 if executor:

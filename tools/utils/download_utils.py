@@ -2,10 +2,15 @@ import os
 import re
 import tempfile
 import threading
+from collections.abc import Generator
+from concurrent.futures import Future
 from functools import cached_property
-from typing import Optional, Mapping
+from pathlib import Path
+from typing import Optional, Mapping, Any
 from urllib.parse import urlparse, unquote
 
+from dify_plugin import Tool
+from dify_plugin.entities.tool import ToolInvokeMessage
 from httpx import Response, Client, Limits
 from yarl import URL
 
@@ -174,3 +179,52 @@ def parse_url(url: str) -> Optional[URL]:
         return URL(url)
     except ValueError as e:
         return None
+
+
+def handle_partial_done(cancel_event: threading.Event,
+                        done: set[Future[Any]],
+                        not_done: set[Future[Any]],
+                        ):
+    # cancel all downloads by setting the cancel event
+    assert not cancel_event.is_set()
+    cancel_event.set()
+
+    # cancel unfinished futures
+    for future in not_done:
+        future.cancel()
+    done_without_exception = [f for f in done if not f.exception()]
+    done_with_exception = [f for f in done if f.exception()]
+    # Clean up the downloaded temporary files for those that completed without exceptions
+    for f in done_without_exception:
+        file_path, mime_type, filename = f.result()
+        force_delete_path(file_path)
+    # Raise the first exception encountered in the futures
+    for f in done_with_exception:
+        if f.exception():
+            raise f.exception()
+
+
+def handle_all_done(tool: Tool,
+                    done: set[Future[Any]],
+                    is_to_file: bool = True,
+                    ) -> Generator[ToolInvokeMessage, None, None]:
+    # all completed without exceptions
+    sorted_done = sorted(done, key=lambda f: f.result()[0])  # sort by index
+    for future in sorted_done:
+        idx, file_path, mime_type, filename = future.result()
+        try:
+            if is_to_file:
+                downloaded_file_bytes = Path(file_path).read_bytes()
+                yield tool.create_blob_message(
+                    blob=downloaded_file_bytes,
+                    meta={
+                        "mime_type": mime_type,
+                        "filename": filename,
+                    }
+                )
+            else:
+                downloaded_file_text = Path(file_path).read_text(encoding="utf-8")
+                yield tool.create_text_message(text=downloaded_file_text)
+        finally:
+            # Clean up the downloaded temporary files
+            force_delete_path(file_path)

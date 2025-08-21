@@ -1,14 +1,14 @@
 identity:
-  name: "multiple_file_download"
+  name: "download_to_text"
   author: "bowenliang123"
   label:
-    en_US: Download multiple files
-    zh_Hans: 下载多个文件
+    en_US: Download to text
+    zh_Hans: 下载为文本
 description:
   human:
-    en_US: Download multiple files from URLs
-    zh_Hans: 从URL下载多个文件
-  llm: "Download files from URL"
+    en_US: Download multiple URLs to text
+    zh_Hans: 从多个URL下载为文本
+  llm: "Download multiple URLs to text"
 parameters:
   - name: url
     type: string
@@ -20,16 +20,6 @@ parameters:
       en_US: "Multiple HTTP or HTTPS URLs to download the file from, separated by lines"
       zh_Hans: "多个HTTP或HTTPS URL地址，每行一个"
     llm_description: "Multiple HTTP or HTTPS URLs to download the file from, each line for a single URL"
-    form: llm
-  - name: output_filename
-    type: string
-    required: false
-    label:
-      en_US: Output Filenames
-      zh_Hans: 输出文件名
-    human_description:
-      en_US: Optional custom output file names, as each line for single file. Blank line for auto-generated file names from HTTP response.
-      zh_Hans: 可选的自定义输出文件名。每行一个文件名，若空行则自动生成。
     form: llm
   - name: request_method
     type: select
@@ -116,4 +106,4 @@ parameters:
     form: form
 extra:
   python:
-    source: tools/multiple_file_download/multiple_file_download.py
+    source: tools/download_to_text/download_to_text.py

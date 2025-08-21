@@ -2,11 +2,11 @@ identity:
   author: "bowenliang123"
   name: "download"
   label:
-    en_US: File Download
+    en_US: Download
     zh_Hans: 文件下载
   description:
-    en_US: Download files from URL, with support of concurrent downloading, streaming transporting, proxy, keep-alive, custom file names, HTTP redirection, timeout controls and SSL certificate configs.
-    zh_Hans: 从URL链接下载文件, 支持并发、流式传输、代理、连接复用、自定义文件名、HTTP重定向、超时控制和SSL开关等功能。
+    en_US: Download to files or text, with support of GET/POST, custom file names/headers/body, proxy, concurrency, streaming transporting, keep-alive, HTTP redirection, timeout controls and SSL certificate configs.
+    zh_Hans: 下载URL为文件或文本, 支持GET/POST、自定义文件名/header/请求体、代理、并发、流式传输、代理、连接复用、HTTP重定向、超时控制和SSL开关等功能。
   icon: "icon.svg"
 
 #########################################################################################
@@ -54,6 +54,7 @@ identity:
 tools:
   - tools/single_file_download/single_file_download.yaml
   - tools/multiple_file_download/multiple_file_download.yaml
+  - tools/download_to_text/download_to_text.yaml
 extra:
   python:
     source: provider/download.py

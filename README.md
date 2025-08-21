@@ -8,7 +8,10 @@
 
 ## Overview
 
-Download files from URL, with support of concurrent downloading, streaming transporting, proxy, keep-alive, custom file names, HTTP redirection, timeout controls and SSL certificate configs.
+Download to files or text, with support of concurrent downloading, streaming transporting, proxy, keep-alive, custom file names, HTTP redirection, timeout controls and SSL certificate configs.
+
+- URL(s) -> Files
+- URL(s) -> Text
 
 ## Key Features
 
@@ -55,11 +58,29 @@ Download files from URL, with support of concurrent downloading, streaming trans
         - enable or disable SSL certificate verification
 
 ![multiple_file_download_1.png](_assets/multiple_file_download_1.png)
-multiple_file_download_1.png
+
+### Download Multiple URLs to Text
+
+- tool: `download_to_text`
+- inputs:
+    - URLs to download file from, one URL per line
+    - Request Timeout in seconds
+    - Optional:
+        - HTTP method to use, either `GET` or `POST`
+        - HTTP headers in JSON format, one header per line
+        - Proxy URL, supporting `http://`, `https://`, `socks5://`
+        - enable or disable SSL certificate verification
+- output:
+    - text: content of the downloaded files, concatenated together
+
+![download_to_text_1.png](_assets/download_to_text_1.png)
 
 ---
 
 ## Changelog
+
+- 0.6.0
+    - introduce `download_to_text` tool, support downloading text from multiple URLs
 
 - 0.5.0:
     - support connection pooling with keep-alive support
