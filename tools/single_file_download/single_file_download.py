@@ -20,7 +20,7 @@ class SingleFileDownloadTool(Tool):
         if url.scheme not in ["http", "https"]:
             raise ValueError("Invalid URL format. URL must start with 'http://' or 'https://'.")
 
-        _, file_path, mime_type, filename = download_to_temp(
+        _, file_path, mime_type, filename, _ = download_to_temp(
             method=params.request_method,
             url=str(url),
             timeout=params.request_timeout,
