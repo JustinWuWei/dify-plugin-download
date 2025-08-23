@@ -98,7 +98,7 @@ def download_to_temp(method: str, url: str,
                      cancel_event: threading.Event = None,
                      custom_filename: Optional[str] = None,
                      idx: int = 0,
-                     ) -> tuple[int, Optional[str], Optional[str], Optional[str]]:
+                     ) -> tuple[int, Optional[str], Optional[str], Optional[str], Optional[str]]:
     """
     Download a file to a temporary file,
     and return the file path, MIME type, and file name.
@@ -121,11 +121,11 @@ def download_to_temp(method: str, url: str,
 
             # check if the download is cancelled
             if cancel_event and cancel_event.is_set():
-                return idx, None, None, None
+                return idx, None, None, None, None
 
             content_type = response.headers.get('content-type')
             mime_type: Optional[str] = content_type.split(';')[0].strip() if content_type else None
-
+            encoding = response.encoding
             filename = custom_filename or guess_file_name(url, response)
 
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -135,7 +135,7 @@ def download_to_temp(method: str, url: str,
                     for chunk in response.iter_bytes(chunk_size=8192):
                         # check if the download is cancelled
                         if cancel_event and cancel_event.is_set():
-                            return idx, None, None, None
+                            return idx, None, None, None, None
 
                         temp_file.write(chunk)
                 except:
@@ -144,7 +144,7 @@ def download_to_temp(method: str, url: str,
                 finally:
                     temp_file.close()
 
-        return idx, file_path, mime_type, filename
+        return idx, file_path, mime_type, filename, encoding
     finally:
         if should_close_client:
             client.close()
@@ -190,18 +190,18 @@ def handle_partial_done(cancel_event: threading.Event,
     cancel_event.set()
 
     # cancel unfinished futures
-    for future in not_done:
-        future.cancel()
+    for f in not_done:
+        f.cancel()
     done_without_exception = [f for f in done if not f.exception()]
     done_with_exception = [f for f in done if f.exception()]
     # Clean up the downloaded temporary files for those that completed without exceptions
-    for f in done_without_exception:
-        file_path, mime_type, filename = f.result()
+    for future in done_without_exception:
+        file_path, _, _, _ = future.result()
         force_delete_path(file_path)
     # Raise the first exception encountered in the futures
-    for f in done_with_exception:
-        if f.exception():
-            raise f.exception()
+    for future in done_with_exception:
+        if future.exception():
+            raise future.exception()
 
 
 def handle_all_done(tool: Tool,
@@ -211,7 +211,7 @@ def handle_all_done(tool: Tool,
     # all completed without exceptions
     sorted_done = sorted(done, key=lambda f: f.result()[0])  # sort by index
     for future in sorted_done:
-        idx, file_path, mime_type, filename = future.result()
+        idx, file_path, mime_type, filename, encoding = future.result()
         try:
             if is_to_file:
                 downloaded_file_bytes = Path(file_path).read_bytes()
@@ -223,7 +223,7 @@ def handle_all_done(tool: Tool,
                     }
                 )
             else:
-                downloaded_file_text = Path(file_path).read_text(encoding="utf-8")
+                downloaded_file_text = Path(file_path).read_text(encoding=encoding or "utf-8")
                 yield tool.create_text_message(text=downloaded_file_text)
         finally:
             # Clean up the downloaded temporary files
