@@ -1,10 +1,8 @@
 # Download - Full-featured File Downloader
 
-**Author:** [bowenliang123](https://github.com/bowenliang123)
+**Author:** [JustinWuWei](https://github.com/JustinWuWei)
 
-**Github Repository:** https://github.com/bowenliang123/dify-plugin-download
-
-**Dify Marketplace:** https://marketplace.dify.ai/plugins/bowenliang123/download
+**Github Repository:** https://github.com/JustinWuWei/dify-plugin-download
 
 ## Overview
 
