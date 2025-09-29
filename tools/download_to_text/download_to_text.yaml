@@ -1,6 +1,6 @@
 identity:
   name: "download_to_text"
-  author: "bowenliang123"
+  author: "justinwuwei"
   label:
     en_US: Download To Text
     zh_Hans: 批量下载为文本

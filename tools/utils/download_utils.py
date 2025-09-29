@@ -2,6 +2,7 @@ import os
 import re
 import tempfile
 import threading
+import mimetypes
 from collections.abc import Generator
 from concurrent.futures import Future
 from functools import cached_property
@@ -124,9 +125,11 @@ def download_to_temp(method: str, url: str,
                 return idx, None, None, None, None
 
             content_type = response.headers.get('content-type')
-            mime_type: Optional[str] = content_type.split(';')[0].strip() if content_type else None
             encoding = response.encoding
             filename = custom_filename or guess_file_name(url, response)
+            
+            # 使用文件名推测更准确的 MIME 类型，如果无法推测则使用 HTTP 头中的类型
+            mime_type = guess_mime_type_from_filename(filename, content_type)
 
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 file_path = temp_file.name
@@ -169,6 +172,31 @@ def guess_file_name(url: str, response: Response) -> Optional[str]:
             filename = unquote(os.path.basename(path))
 
     return filename
+
+
+def guess_mime_type_from_filename(filename: Optional[str], content_type: Optional[str] = None) -> Optional[str]:
+    """
+    根据文件名推测 MIME 类型，如果无法推测则从 HTTP Content-Type 头中提取
+    
+    Args:
+        filename: 文件名
+        content_type: HTTP Content-Type 头的原始值
+        
+    Returns:
+        推测的 MIME 类型
+    """
+    # 首先尝试根据文件名推测 MIME 类型
+    if filename:
+        guessed_mime_type, _ = mimetypes.guess_type(filename)
+        if guessed_mime_type:
+            return guessed_mime_type
+    
+    # 如果无法从文件名推测，则从 HTTP Content-Type 头中提取
+    if content_type:
+        return content_type.split(';')[0].strip()
+    
+    # 如果都无法获取，返回 None
+    return None
 
 
 def parse_url(url: str) -> Optional[URL]:
